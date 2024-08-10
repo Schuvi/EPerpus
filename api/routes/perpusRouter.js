@@ -1,0 +1,33 @@
+const express = require("express")
+const router = express.Router()
+
+const perpusController = require("../controller/perpusController")
+
+router.get("/get/books", perpusController.getBooks)
+router.get("/get/books/categories", perpusController.getBooksByCategories )
+router.get("/get/books/genre", perpusController.getBooksByGenre)
+router.get("/search/books", perpusController.searchBooks)
+router.get("/get/books/id", perpusController.getBooksById)
+router.get("/get/books/popular", perpusController.getBooksByPopularity)
+router.get("/get/books/fav", perpusController.getFavoriteBooks)
+router.get("/get/books/borrowed", perpusController.getBooksBorrowed)
+router.get("/get/user", perpusController.getUserById)
+router.get("/get/user", perpusController.getUser)
+router.get("/get/user/borrow", perpusController.getUserByBorrow)
+router.put("/edit/books", perpusController.updateBooks)
+router.put("/return/books", perpusController.pengembalianBuku)
+router.put("/broke/books", perpusController.rusakBuku)
+router.put("/stat/login", perpusController.updateStatusLogin)
+router.put("/logout", perpusController.logout)
+router.put("/edit/user", perpusController.editUser)
+router.post("/create/books", perpusController.createBooks)
+router.post("/transaction", perpusController.createTransaction)
+router.post("/register", perpusController.createUser)
+router.post("/login", perpusController.login)
+router.post("/favorite", perpusController.makeFavorite)
+router.delete("/delete/books", perpusController.deleteBooks)
+router.delete("/delete/user", perpusController.deleteUser)
+router.delete("/delete/booksfav", perpusController.deleteFavorite)
+
+
+module.exports = router;
