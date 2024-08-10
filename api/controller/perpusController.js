@@ -8,7 +8,7 @@ const path = require('path');
 const perpusController = {
     getBooks: async (req, res) => {
         try {
-            const [rows, fields] = await pool.query("SELECT buku.id_buku, buku.judul_buku, buku.pengarang_buku, buku.penerbit_buku, buku.tahun_buku, buku_status.status, buku.gambar_buku, buku.file_buku, buku.deskripsi_buku FROM buku JOIN buku_status on buku.status_buku = buku_status.id_status")
+            const [rows, fields] = await pool.query("SELECT buku.id_buku, buku.judul_buku, buku.pengarang_buku, buku.penerbit_buku, buku.tahun_buku, buku_status.status, buku.gambar_buku, buku.file_buku, buku.deskripsi_buku FROM buku JOIN buku_status ON buku.status_buku = buku_status.id_status")
             res.json({
                 data: rows
             })
@@ -221,6 +221,54 @@ const perpusController = {
 
         try {
             const [rows, field] = await pool.query(`SELECT buku.id_buku, buku.judul_buku, buku.pengarang_buku, buku.penerbit_buku, buku.tahun_buku, buku_status.status, buku.gambar_buku, buku.deskripsi_buku FROM buku JOIN buku_status on buku.status_buku = buku_status.id_status WHERE buku.judul_buku LIKE "%${cari}%" OR buku.pengarang_buku LIKE "%${cari}%"`)
+            
+            if (rows.length < 1) {
+                res.json({
+                    message: "Buku tidak ditemukan",
+                })
+            } else {
+                res.json({
+                    data: rows
+                })
+            }
+
+        } catch (error) {
+            console.error(error)
+            res.json({
+                state: "error"
+            })
+        }
+    },
+
+    searchBooksByCategories : async (req, res) => {
+        const {cari} = req.query
+
+        try {
+            const [rows, field] = await pool.query(`SELECT buku.id_buku, buku.judul_buku, buku.pengarang_buku, buku.penerbit_buku, buku.tahun_buku, buku_status.status, buku.gambar_buku, buku.deskripsi_buku, buku_kategori.kategori FROM buku JOIN buku_status on buku.status_buku = buku_status.id_status JOIN kategori ON kategori.id_buku = buku.id_buku JOIN buku_kategori ON kategori.kategori_buku = buku_kategori.id_kategori WHERE buku_kategori.kategori LIKE "%${cari}%"`)
+            
+            if (rows.length < 1) {
+                res.json({
+                    message: "Buku tidak ditemukan",
+                })
+            } else {
+                res.json({
+                    data: rows
+                })
+            }
+
+        } catch (error) {
+            console.error(error)
+            res.json({
+                state: "error"
+            })
+        }
+    },
+
+    searchBooksByGenre : async (req, res) => {
+        const {cari} = req.query
+
+        try {
+            const [rows, field] = await pool.query(`SELECT buku.id_buku, buku.judul_buku, buku.pengarang_buku, buku.penerbit_buku, buku.tahun_buku, buku_status.status, buku.gambar_buku, buku.deskripsi_buku, buku_genre.genre FROM buku JOIN buku_status on buku.status_buku = buku_status.id_status JOIN genre ON genre.id_buku = buku.id_buku JOIN buku_genre ON genre.genre = buku_genre.id_genre WHERE buku_genre.genre LIKE "%${cari}%"`)
             
             if (rows.length < 1) {
                 res.json({

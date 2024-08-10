@@ -4,6 +4,8 @@ import Home from "./components/pages/home";
 import Splash from "./components/pages/splash_screen";
 import Footer from "./components/footer/footer";
 import Search from "./components/pages/search";
+import BookAll from "./components/pages/book_all";
+import BookPopular from "./components/pages/book_popular";
 import { Route, Routes } from "react-router-dom";
 import DetailBooks from "./components/pages/detailBooks";
 
@@ -28,6 +30,8 @@ export default function App() {
                 <Route path="/" element={<Home />}/>
                 <Route path="/search" element={<Search />}/>
                 <Route path="/detail/id/:id_buku" element={<DetailBooks />}/>
+                <Route path="/buku" element={<BookAll />}/>
+                <Route path="/buku/populer" element={<BookPopular />}/>
               </Routes>
             </div>
             <Footer/> 

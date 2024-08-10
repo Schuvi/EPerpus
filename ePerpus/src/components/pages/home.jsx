@@ -72,7 +72,7 @@ export default function Home() {
             </section>
 
             <section className="flex flex-row justify-evenly mt-5 p-2">
-                <div className="container w-1/3 h-[10vh] flex flex-col justify-center items-center">
+                <div className="container w-1/3 h-[10vh] flex flex-col justify-center items-center" onClick={() => {navigate("/buku")}}>
                     <i className="fa-solid fa-book text-[2em] text-pallet1"></i>
                     <h1 className="text-md text-center mt-1 tracking-tight">Buku Terbaru</h1>
                 </div>
@@ -93,7 +93,7 @@ export default function Home() {
                         <p className="text-sm">Koleksi yang paling banyak dipinjam</p>
                     </div>
                     <div className="container text-end w-1/3">
-                        <Link to="#" className="text-blue-500">Lihat Semua</Link>
+                        <Link to="/buku/populer" className="text-blue-500">Lihat Semua</Link>
                     </div>
                 </div>
 
@@ -107,7 +107,7 @@ export default function Home() {
                         <p className="text-sm">Koleksi terbaru dari kami</p>
                     </div>
                     <div className="container text-end w-1/3">
-                        <Link to="#" className="text-blue-500">Lihat Semua</Link>
+                        <Link to="buku" className="text-blue-500">Lihat Semua</Link>
                     </div>
                 </div>
 

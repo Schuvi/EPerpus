@@ -60,7 +60,7 @@ export default function Navbar() {
                                 <Link to="/" onClick={toggleMenu}>Beranda</Link>
                             </div>
                             <div className="p-2 hover:bg-pallet1 hover:text-white">
-                                <Link to="#" onClick={toggleMenu}>Koleksi Buku</Link>
+                                <Link to="/buku" onClick={toggleMenu}>Koleksi Buku</Link>
                             </div>
                             <div className="p-2 hover:bg-pallet1 hover:text-white">
                                 <Link to="#" onClick={toggleMenu}>Pustakawan</Link>
