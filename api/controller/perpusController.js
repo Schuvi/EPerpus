@@ -668,32 +668,63 @@ const perpusController = {
     },
 
     login: async (req, res) => {
-        const connection = await pool.getConnection()
+        const connection = await pool.getConnection();
         try {
-            const {id_user} = req.body
+            const { username, password } = req.body;
+    
+            console.log({"username": username});
             
-            await connection.beginTransaction()
-
-            const sqlLogin = `SELECT * FROM user_data WHERE id_user = ?`
-
-            const [result] = await connection.query(sqlLogin, [id_user])
-
-            await connection.commit()
-
-            res.json({
-                message: "Berhasil Login",
-                id_user,
-                data: result
-            })
-
+            await connection.beginTransaction();
+    
+            const sqlLogin = `SELECT * FROM user_data WHERE nama_lengkap = ?`;
+            const [result] = await connection.query(sqlLogin, [username]);
+    
+            await connection.commit();
+    
+            if (result.length === 0) {
+                return res.json({
+                    state: "error",
+                    message: "User tidak ditemukan"
+                });
+            }
+    
+            const user = result[0];
+            
+            const passwordMatch = await bcrypt.compare(password, user.password);
+    
+            if (!passwordMatch) {
+                return res.json({
+                    state: "error",
+                    message: "Password salah"
+                });
+            }
+    
+            if (user.role === 'user') {
+                return res.json({
+                    message: "Berhasil Login sebagai User",
+                    data: user
+                });
+            } else if (user.role === 'admin') {
+                return res.json({
+                    message: "Berhasil Login sebagai Admin",
+                    data: user
+                });
+            } else {
+                return res.json({
+                    state: "error",
+                    message: "Role tidak dikenal"
+                });
+            }
+    
         } catch (error) {
-            console.error(error)
+            console.error(error);
+            await connection.rollback();
             res.json({
                 state: "error",
                 message: error.message
-            })
+            });
         } finally {
-            connection.release()
+            connection.release();
         }
     },
 

@@ -13,13 +13,40 @@ import CircularProgress, { circularProgressClasses } from '@mui/material/Circula
 import CardUser from "../card_user";
 
 export default function Home() {
+    const username = window.localStorage.getItem("username")
+    const id_user = window.localStorage.getItem("id_user")
+
     const base_url = import.meta.env.VITE_API_ENDPOINT
 
-    const navigate = useNavigate()
+    const navigate = useNavigate();
+
+    const logout = () => {
+        axios.put(base_url + `/logout?id_user=${id_user}`)
+        .then((res) => {
+            if (res.data.message === "Berhasil Logout") {
+                window.localStorage.removeItem("token")
+                window.localStorage.removeItem("profile")
+                window.localStorage.removeItem("id_user")
+                window.localStorage.setItem("isLoggedIn", false)
+                
+                alert(`Sampai Jumpa Lagi ${username}`)
+
+                window.localStorage.removeItem("username")
+
+                navigate("/login")
+            } else {
+                alert("Gagal Logout")
+            }
+        })
+
+
+
+
+    }
 
     useEffect(() => {
         AOS.init()
-    })
+    });
 
     const getBuku = async () => {
         const response = await axios.get(base_url + "/get/books/popular");
@@ -48,13 +75,14 @@ export default function Home() {
             <CircularProgress sx={{ 'svg circle': { stroke: 'url(#my_gradient)' } }} />
           </React.Fragment>
         );
-    }
+    };
 
     if (isLoading || isFetching) return (
         <div className="container flex justify-center items-center h-[80vh] w-full">
             <GradientCircularProgress />
         </div>
     );
+
     if (error) return <div>Error: {error.message}</div>;
 
     return (
@@ -84,6 +112,9 @@ export default function Home() {
                     <i className="fa-solid fa-bookmark text-[2em] text-pallet1"></i>
                     <h1 className="text-md text-center mt-1 tracking-tight">Favorit</h1>
                 </div>
+                <button onClick={logout}>
+                    logout
+                </button>
             </section>
 
             <section data-aos = "fade-right" data-aos-once="true">
@@ -124,7 +155,6 @@ export default function Home() {
 
                 <CardUser />
             </section>
-
         </>
     );
 }

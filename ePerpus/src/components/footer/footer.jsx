@@ -4,7 +4,7 @@ import logo from "../../assets/logo.png"
 export default function Footer() {
     return (
         <>
-            <section className="flex flex-col justify-center items-center p-3 mt-5 bg-pallet1 shadow-lg h-[29vh]">
+            <section className="flex flex-col justify-center items-center p-3 mt-5 bg-pallet2 shadow-lg h-[29vh]">
                 <div className="container flex justify-center items-center mb-5">
                     <img src={logo} alt="logo techlibrary" className="w-[20vw]"/>
                     <h1 className="text-2xl font-bold">TechLibrary</h1>

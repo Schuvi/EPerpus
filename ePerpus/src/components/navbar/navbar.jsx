@@ -37,13 +37,13 @@ export default function Navbar() {
                 <div className="container w-1/2 hidden md:hidden lg:flex xl:flex 2xl:flex">
                     <div className="container w-full flex justify-evenly border-r-2 mr-2">
                         <Link to="/">Beranda</Link>
-                        <Link to="#">Koleksi Buku</Link>
+                        <Link to="/buku">Koleksi Buku</Link>
                         <Link to="#">Pustakawan</Link>
                         <Link to="#">Bantuan</Link>
                     </div>
                     <div className="container w-1/3 flex justify-evenly items-center">
-                        <Link to="#">Login</Link>
-                        <Link to="#">Register</Link>
+                        <Link to="/login">Login</Link>
+                        <Link to="/register">Register</Link>
                     </div>
                 </div>
 
@@ -70,9 +70,9 @@ export default function Navbar() {
                             </div>
 
                             <div className="p-2 hover:bg-pallet1 hover:text-white flex justify-around">
-                                <Link to="#" onClick={toggleMenu}>Login</Link>
+                                <Link to="/login" onClick={toggleMenu}>Login</Link>
                                 /
-                                <Link to="#" onClick={toggleMenu}>Register</Link>
+                                <Link to="/register" onClick={toggleMenu}>Register</Link>
                             </div>
                         </div>
                     </>

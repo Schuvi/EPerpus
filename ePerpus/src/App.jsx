@@ -6,6 +6,8 @@ import Footer from "./components/footer/footer";
 import Search from "./components/pages/search";
 import BookAll from "./components/pages/book_all";
 import BookPopular from "./components/pages/book_popular";
+import Register from "./components/auth/register";
+import Login from "./components/auth/login";
 import { Route, Routes } from "react-router-dom";
 import DetailBooks from "./components/pages/detailBooks";
 
@@ -28,6 +30,8 @@ export default function App() {
             <div className="wrapper-content font-firaSans">
               <Routes>
                 <Route path="/" element={<Home />}/>
+                <Route path="/register" element={<Register />}/>
+                <Route path="/login" element={<Login />}/>
                 <Route path="/search" element={<Search />}/>
                 <Route path="/detail/id/:id_buku" element={<DetailBooks />}/>
                 <Route path="/buku" element={<BookAll />}/>
