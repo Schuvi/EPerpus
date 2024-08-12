@@ -1,6 +1,7 @@
 import react from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import logo from "../../assets/logo.png";
+import axios from "axios";
 
 export default function Navbar() {
     const [isOpen, setIsOpen] = react.useState(false);
@@ -9,6 +10,14 @@ export default function Navbar() {
         ☰
     </>
     )
+    const navigate = useNavigate()
+
+    const isLoggedIn = window.localStorage.getItem("isLoggedIn")
+
+    const base_url = import.meta.env.VITE_API_ENDPOINT
+
+    const username = window.localStorage.getItem("username")
+    const id_user = window.localStorage.getItem("id_user")
     
     const toggleMenu = () => {
         setIsOpen(!isOpen);
@@ -27,6 +36,26 @@ export default function Navbar() {
         }
     };
 
+    const logout = () => {
+        axios.put(base_url + `/logout?id_user=${id_user}`)
+        .then((res) => {
+            if (res.data.message === "Berhasil Logout") {
+                window.localStorage.removeItem("token")
+                window.localStorage.removeItem("profile")
+                window.localStorage.removeItem("id_user")
+                window.localStorage.removeItem("isLoggedIn")
+                
+                alert(`Sampai Jumpa Lagi ${username}`)
+
+                window.localStorage.removeItem("username")
+
+                navigate("/login")
+            } else {
+                alert("Gagal Logout")
+            }
+        })
+    }
+
     return (
         <>
             <nav className="bg-pallet2 h-[10vh] w-full flex justify-center items-center p-5">
@@ -39,13 +68,28 @@ export default function Navbar() {
                         <Link to="/">Beranda</Link>
                         <Link to="/buku">Koleksi Buku</Link>
                         <Link to="#">Pustakawan</Link>
-                        <Link to="#">Bantuan</Link>
+                        <Link to="#">Profile</Link>
                     </div>
-                    <div className="container w-1/3 flex justify-evenly items-center">
-                        <Link to="/login">Login</Link>
-                        <Link to="/register">Register</Link>
-                    </div>
+
+                    {isLoggedIn ? (
+                                <>
+                                    <div className="container w-1/3 flex justify-evenly items-center">
+                                        <button type="button" onClick={logout}>
+                                            logout
+                                        </button>
+                                    </div>
+                                </>
+                            ) : (
+                                <>
+                                    <div className="container w-1/3 flex justify-evenly items-center">
+                                        <Link to="/login">Login</Link>
+                                        <Link to="/register">Register</Link>
+                                    </div>
+                                </>
+                    )}
                 </div>
+
+                
 
                 <div className="container flex justify-end md:flex lg:hidden xl:hidden 2xl:hidden">
                     <button onClick={toggleMenu} className="text-xl">
@@ -69,11 +113,24 @@ export default function Navbar() {
                                 <Link to="#" onClick={toggleMenu}>Bantuan</Link>
                             </div>
 
-                            <div className="p-2 hover:bg-pallet1 hover:text-white flex justify-around">
-                                <Link to="/login" onClick={toggleMenu}>Login</Link>
-                                /
-                                <Link to="/register" onClick={toggleMenu}>Register</Link>
-                            </div>
+                            {isLoggedIn ? (
+                                <>
+                                    <div className="p-2 hover:bg-pallet1 hover:text-white flex justify-around">
+                                        <button type="button" onClick={logout}>
+                                            logout
+                                        </button>
+                                    </div>
+                                </>
+                            ) : (
+                                <>
+                                    <div className="p-2 hover:bg-pallet1 hover:text-white flex justify-around">
+                                        <Link to="/login" onClick={toggleMenu}>Login</Link>
+                                        /
+                                        <Link to="/register" onClick={toggleMenu}>Register</Link>
+                                    </div>
+                                </>
+                            )}
+
                         </div>
                     </>
                 )}

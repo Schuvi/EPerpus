@@ -1,5 +1,5 @@
 import React, {useState} from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import axios from "axios";
 import { useMutation } from "@tanstack/react-query";
 
@@ -46,6 +46,12 @@ export default function Login() {
                 alert(`Selamat Datang Admin ${data.data.nama_lengkap}`)
             } else if (data.message === "Password salah") {
                 alert("Password salah, silahkan hubungi admin jika anda lupa akan password anda")
+            } else if (data.message === "User tidak ditemukan") {
+                alert("User tidak ditemukan, silahkan registrasi terlebih dahulu")
+            } else if (data.message === "Akun Anda Telah Login di Perangkat Lain") {
+                alert("Akun Anda Telah Login di Perangkat Lain")
+            } else if (data.message === "Akun Anda Telah Diblokir") {
+                alert("Akun Anda Telah Diblokir")
             }
         },
         onError: (error) => {
@@ -73,7 +79,7 @@ export default function Login() {
     return (
         <>
             <section className="p-2 h-[51.1vh] flex items-center">
-                <div className="container bg-pallet1 rounded-lg p-2 h-fit flex flex-col items-center">
+                <div className="container bg-pallet1 rounded-lg p-2 h-[38vh] flex flex-col items-center">
                     <h1 className="text-white text-center text-lg font-bold">Login Akun</h1>
                 
                     <form className="container flex flex-col justify-evenly" onSubmit={handleSubmit}>
@@ -86,13 +92,17 @@ export default function Login() {
                             Password
                         </label>
                         <input type={showPass ? "text" : "password"} name="password" id="password" placeholder="Masukkan Password Anda" value={data.password} className="rounded-xl" onChange={handleChange} required minLength={8}/>
-                        <div className="container flex items-center">
+                        <div className="container flex items-center mt-2">
                             <input type="checkbox" onClick={() => setShowPass(!showPass)}/>
                             <h1 className="text-white ml-2">Tampilkan Password</h1>
                         </div>
 
                         <div className="container text-center mt-2">
-                           <button type="submit" className="border rounded-xl w-[20vw] text-white">
+                            <Link to="/register" className="text-white hover:text-pallet3">Belum Punya Akun? Register Disini</Link>
+                        </div>
+
+                        <div className="container text-center mt-2">
+                           <button type="submit" className="border rounded-xl w-[35vw] h-[5vh] text-white">
                                 Login
                             </button>
                         </div>

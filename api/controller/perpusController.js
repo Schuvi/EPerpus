@@ -700,10 +700,23 @@ const perpusController = {
             }
     
             if (user.role === 'user') {
-                return res.json({
-                    message: "Berhasil Login sebagai User",
-                    data: user
-                });
+                if (user.status === 1) {
+                    return res.json({
+                        state: "error",
+                        message: "Akun Anda Telah Login di Perangkat Lain"
+                    })
+                } else if (user.status === 4) {
+                    return res.json({
+                        state: "error",
+                        message: "Akun Anda Telah Diblokir"
+                    })
+                } else {
+                    return res.json({
+                        message: "Berhasil Login sebagai User",
+                        data: user
+                    });
+                }
+                
             } else if (user.role === 'admin') {
                 return res.json({
                     message: "Berhasil Login sebagai Admin",

@@ -1,7 +1,7 @@
 import { useMutation } from "@tanstack/react-query";
 import React, {useEffect, useState} from "react";
 import axios from "axios";
-import {useNavigate} from "react-router-dom";
+import {useNavigate, Link} from "react-router-dom";
 
 export default function Register() {
     const [data, setData] = useState({
@@ -122,7 +122,7 @@ export default function Register() {
                 <div className="container bg-pallet1 shadow-xl h-full rounded-lg p-3">
                     <h1 className="text-center text-lg font-bold mb-3 text-white">Register Akun Baru</h1>
 
-                    <form onSubmit={handleSubmit} className="flex flex-col justify-evenly h-[50vh]">
+                    <form onSubmit={handleSubmit} className="flex flex-col justify-evenly h-[57vh]">
                         <label htmlFor="id_user" className="after:content-['*'] after:ml-0.5 after:text-red-700 text-white">
                             ID Pengguna
                         </label>
@@ -192,6 +192,10 @@ export default function Register() {
                             onChange={handleChange}
                         />
                         <input type="text" name="role" id="role" hidden value={data.role} onChange={handleChange}/>
+
+                        <div className="container text-center mt-3">
+                            <Link to="/login" className="text-white hover:text-pallet3">Sudah Memiliki Akun? Login Disini</Link>
+                        </div>
 
                         <div className="container text-center mt-3">
                             <button type="submit" className="border w-[25vw] rounded-lg bg-pallet1 text-white">
