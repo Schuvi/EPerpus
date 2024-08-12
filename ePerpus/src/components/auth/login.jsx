@@ -91,10 +91,10 @@ export default function Login() {
                         <label htmlFor="password" className="text-white after:content-['*'] after:text-red-700 after:ml-1">
                             Password
                         </label>
-                        <input type={showPass ? "text" : "password"} name="password" id="password" placeholder="Masukkan Password Anda" value={data.password} className="rounded-xl" onChange={handleChange} required minLength={8}/>
+                        <input type={showPass ? "text" : "password"} name="password" id="password" placeholder="Masukkan Password Anda" value={data.password} className="rounded-xl" onChange={handleChange} autoComplete="off" required minLength={8}/>
                         <div className="container flex items-center mt-2">
-                            <input type="checkbox" onClick={() => setShowPass(!showPass)}/>
-                            <h1 className="text-white ml-2">Tampilkan Password</h1>
+                            <input type="checkbox" id="tampil" onClick={() => setShowPass(!showPass)}/>
+                            <label htmlFor="tampil" className="text-white ml-1">Tampilkan Password</label>
                         </div>
 
                         <div className="container text-center mt-2">

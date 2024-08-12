@@ -29,7 +29,7 @@ router.post("/login", perpusController.login)
 router.post("/favorite", perpusController.makeFavorite)
 router.delete("/delete/books", perpusController.deleteBooks)
 router.delete("/delete/user", perpusController.deleteUser)
-router.delete("/delete/booksfav", perpusController.deleteFavorite)
+router.delete("/delete/books/fav", perpusController.deleteFavorite)
 
 
 module.exports = router;

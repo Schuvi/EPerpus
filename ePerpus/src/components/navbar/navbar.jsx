@@ -40,20 +40,21 @@ export default function Navbar() {
         axios.put(base_url + `/logout?id_user=${id_user}`)
         .then((res) => {
             if (res.data.message === "Berhasil Logout") {
-                window.localStorage.removeItem("token")
-                window.localStorage.removeItem("profile")
-                window.localStorage.removeItem("id_user")
-                window.localStorage.removeItem("isLoggedIn")
+                // window.localStorage.removeItem("token")
+                // window.localStorage.removeItem("profile")
+                // window.localStorage.removeItem("id_user")
+                // window.localStorage.removeItem("isLoggedIn")
                 
                 alert(`Sampai Jumpa Lagi ${username}`)
 
-                window.localStorage.removeItem("username")
+                window.localStorage.clear();
 
                 navigate("/login")
             } else {
                 alert("Gagal Logout")
             }
         })
+        // setIsOpen(!isOpen);
     }
 
     return (

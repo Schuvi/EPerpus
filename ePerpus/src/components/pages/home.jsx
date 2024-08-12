@@ -15,7 +15,7 @@ import CardUser from "../card_user";
 export default function Home() {
     const isLoggedIn = window.localStorage.getItem("isLoggedIn");
     console.log(isLoggedIn)
-    
+
     const base_url = import.meta.env.VITE_API_ENDPOINT
 
     const navigate = useNavigate();
@@ -84,7 +84,7 @@ export default function Home() {
                     <i className="fa-solid fa-magnifying-glass text-[2em] text-pallet1"></i>
                     <h1 className="text-md text-center mt-1 tracking-tight">Cari Buku</h1>
                 </div>
-                <div className="container w-1/3 h-[10vh] flex flex-col justify-center items-center">
+                <div className="container w-1/3 h-[10vh] flex flex-col justify-center items-center" onClick={() => {navigate("/buku/favorit")}}>
                     <i className="fa-solid fa-bookmark text-[2em] text-pallet1"></i>
                     <h1 className="text-md text-center mt-1 tracking-tight">Favorit</h1>
                 </div>

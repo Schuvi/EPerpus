@@ -110,16 +110,23 @@ const perpusController = {
 
             const {id_user} = req.query
 
-            const sql = "SELECT buku_favorit.id_user, buku.judul_buku, buku.gambar_buku FROM buku_favorit JOIN buku ON buku_favorit.id_buku = buku.id_buku WHERE id_user = ?"
+            const sql = "SELECT id_favorit, buku_favorit.id_user, buku.judul_buku, buku.gambar_buku, buku.pengarang_buku, buku.id_buku FROM buku_favorit JOIN buku ON buku_favorit.id_buku = buku.id_buku WHERE id_user = ?"
 
             const [result] = await connection.query(sql, [id_user])
 
             await connection.commit()
 
-            res.json({
-                message: "Berhasil mengambil data buku favorit",
-                data: result
-            })
+            if (result.length < 1) {
+                res.json({
+                    message: "Tambahkan Buku Ke Favorit"
+                })
+            } else {
+                res.json({
+                    message: "Berhasil mengambil data buku favorit",
+                    data: result
+                })
+            }
+
         } catch (error) {
             console.error(error)
             res.json({
@@ -193,17 +200,17 @@ const perpusController = {
         try {
             await connection.beginTransaction()
 
-            const {id_user} = req.query
+            const {id_favorit} = req.query
 
-            const sql = "DELETE FROM buku_favorit WHERE id_user = ?"
+            const sql = "DELETE FROM buku_favorit WHERE id_favorit = ?"
 
-            await connection.query(sql, [id_user])
+            await connection.query(sql, [id_favorit])
 
             await connection.commit()
 
             res.json({
                 message: "Berhasil menghapus buku dari favorit",
-                id_user
+                id_favorit
             })
         } catch (error) {
             console.error(error)

@@ -9,12 +9,14 @@ import BookPopular from "./components/pages/book_popular";
 import Register from "./components/auth/register";
 import Login from "./components/auth/login";
 import DetailBooks from "./components/pages/detailBooks";
+import FavoriteBooks from "./components/pages/favoriteBooks";
 import ProtectedRoute from "./components/auth/ProtectedRoute";
 import { Route, Routes, Navigate } from "react-router-dom";
 
 export default function App() {
-  const isLoggedIn = window.localStorage.getItem("isLoggedIn")
+  const isLoggedIn = window.localStorage.getItem("isLoggedIn");
   console.log(isLoggedIn)
+
 
   const [showSplash, setShowSplash] = useState(true)
 
@@ -35,21 +37,11 @@ export default function App() {
               <Routes>
                 <Route element={<ProtectedRoute />}>
 
-                {isLoggedIn ? (
-                  <>
-                    <Route path="/search" element={<Search />}/>
-                    <Route path="/detail/id/:id_buku" element={<DetailBooks />}/>
-                    <Route path="/buku" element={<BookAll />}/>
-                    <Route path="/buku/populer" element={<BookPopular />}/>
-                  </>
-                ) : (
-                  <>
-                    <Route path="/search" element={<Navigate to="/login" />}/>
-                    <Route path="/detail/id/:id_buku" element={<Navigate to="/login" />}/>
-                    <Route path="/buku" element={<Navigate to="/login" />}/>
-                    <Route path="/buku/populer" element={<Navigate to="/login" />}/>
-                  </>
-                )}
+                  <Route path="/search" element={<Search />}/>
+                  <Route path="/detail/id/:id_buku" element={<DetailBooks />}/>
+                  <Route path="/buku" element={<BookAll />}/>
+                  <Route path="/buku/populer" element={<BookPopular />}/>
+                  <Route path="/buku/favorit" element={<FavoriteBooks />}/>
 
                 </Route>
 
