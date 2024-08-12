@@ -110,7 +110,7 @@ const perpusController = {
 
             const {id_user} = req.query
 
-            const sql = "SELECT id_favorit, buku_favorit.id_user, buku.judul_buku, buku.gambar_buku, buku.pengarang_buku, buku.id_buku FROM buku_favorit JOIN buku ON buku_favorit.id_buku = buku.id_buku WHERE id_user = ?"
+            const sql = "SELECT id_favorit, buku_favorit.id_user, buku.judul_buku, buku.gambar_buku, buku.pengarang_buku, buku.id_buku, buku.penerbit_buku, buku.tahun_buku, buku.file_buku, buku.banyak_pinjaman FROM buku_favorit JOIN buku ON buku_favorit.id_buku = buku.id_buku WHERE id_user = ?"
 
             const [result] = await connection.query(sql, [id_user])
 
@@ -171,17 +171,16 @@ const perpusController = {
         try {
             await connection.beginTransaction()
 
-            const {id_buku, id_user} = req.query
+            const {id_buku, id_user} = req.body
 
             const sql = "INSERT INTO buku_favorit (id_user, id_buku) VALUES (?, ?)"
 
-            const [result] =  await connection.query(sql, [id_buku, id_user])
+            const [result] =  await connection.query(sql, [id_user, id_buku])
 
             await connection.commit()
             
             res.status(200).json({
-                message: "Berhasil menambahkan buku ke favorit",
-                data: result
+                message: "Berhasil menambahkan buku ke favorit"
             })
 
         } catch (error) {
@@ -227,7 +226,7 @@ const perpusController = {
         const {cari} = req.query
 
         try {
-            const [rows, field] = await pool.query(`SELECT buku.id_buku, buku.judul_buku, buku.pengarang_buku, buku.penerbit_buku, buku.tahun_buku, buku_status.status, buku.gambar_buku, buku.deskripsi_buku FROM buku JOIN buku_status on buku.status_buku = buku_status.id_status WHERE buku.judul_buku LIKE "%${cari}%" OR buku.pengarang_buku LIKE "%${cari}%"`)
+            const [rows, field] = await pool.query(`SELECT buku.id_buku, buku.judul_buku, buku.pengarang_buku, buku.penerbit_buku, buku.tahun_buku, buku_status.status, buku.gambar_buku, buku.deskripsi_buku, buku.file_buku FROM buku JOIN buku_status on buku.status_buku = buku_status.id_status WHERE buku.judul_buku LIKE "%${cari}%" OR buku.pengarang_buku LIKE "%${cari}%"`)
             
             if (rows.length < 1) {
                 res.json({
@@ -251,7 +250,7 @@ const perpusController = {
         const {cari} = req.query
 
         try {
-            const [rows, field] = await pool.query(`SELECT buku.id_buku, buku.judul_buku, buku.pengarang_buku, buku.penerbit_buku, buku.tahun_buku, buku_status.status, buku.gambar_buku, buku.deskripsi_buku, buku_kategori.kategori FROM buku JOIN buku_status on buku.status_buku = buku_status.id_status JOIN kategori ON kategori.id_buku = buku.id_buku JOIN buku_kategori ON kategori.kategori_buku = buku_kategori.id_kategori WHERE buku_kategori.kategori LIKE "%${cari}%"`)
+            const [rows, field] = await pool.query(`SELECT buku.id_buku, buku.judul_buku, buku.pengarang_buku, buku.penerbit_buku, buku.tahun_buku, buku_status.status, buku.gambar_buku, buku.deskripsi_buku, buku_kategori.kategori, buku.file_buku FROM buku JOIN buku_status on buku.status_buku = buku_status.id_status JOIN kategori ON kategori.id_buku = buku.id_buku JOIN buku_kategori ON kategori.kategori_buku = buku_kategori.id_kategori WHERE buku_kategori.kategori LIKE "%${cari}%"`)
             
             if (rows.length < 1) {
                 res.json({
@@ -275,7 +274,7 @@ const perpusController = {
         const {cari} = req.query
 
         try {
-            const [rows, field] = await pool.query(`SELECT buku.id_buku, buku.judul_buku, buku.pengarang_buku, buku.penerbit_buku, buku.tahun_buku, buku_status.status, buku.gambar_buku, buku.deskripsi_buku, buku_genre.genre FROM buku JOIN buku_status on buku.status_buku = buku_status.id_status JOIN genre ON genre.id_buku = buku.id_buku JOIN buku_genre ON genre.genre = buku_genre.id_genre WHERE buku_genre.genre LIKE "%${cari}%"`)
+            const [rows, field] = await pool.query(`SELECT buku.id_buku, buku.judul_buku, buku.pengarang_buku, buku.penerbit_buku, buku.tahun_buku, buku_status.status, buku.gambar_buku, buku.deskripsi_buku, buku_genre.genre, buku.file_buku FROM buku JOIN buku_status on buku.status_buku = buku_status.id_status JOIN genre ON genre.id_buku = buku.id_buku JOIN buku_genre ON genre.genre = buku_genre.id_genre WHERE buku_genre.genre LIKE "%${cari}%"`)
             
             if (rows.length < 1) {
                 res.json({

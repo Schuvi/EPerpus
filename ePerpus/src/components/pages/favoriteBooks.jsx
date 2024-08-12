@@ -1,9 +1,12 @@
-import React from "react";
+import React, { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 export default function FavoriteBooks() {
     const id_user = window.localStorage.getItem("id_user")
+    const [favBooks, setFavBooks] = useState([])
+    const [style, setStyle] = useState("h-[51.1vh]")
 
     const base_url = import.meta.env.VITE_API_ENDPOINT
 
@@ -13,6 +16,8 @@ export default function FavoriteBooks() {
     }
 
     const query = useQueryClient()
+
+    const navigate = useNavigate()
 
     const deleteBooks = useMutation({
         mutationFn: async (id_favorit) => {
@@ -41,13 +46,17 @@ export default function FavoriteBooks() {
     const handleDelete = (id_favorit) => {
         deleteBooks.mutate(id_favorit)
     }
+
+    const detail = (item) => {
+        navigate(`/detail/id/${item.id_buku}`, {state: {detail: item}})
+    }
     
     return (
         <>
             <h1 className="text-center mt-1 text-xl font-bold">Favorite Books</h1>
-            <section className="p-2">
+            <section className={`p-2 ${data?.data?.length >= 3 ? "h-fit" : "h-[55vh]" }`}>
                 {data?.data?.map((item) => (
-                    <div className="container flex flex-row items-center border rounded-lg shadow-md p-2 mt-2" key={item.id_buku}>
+                    <div className="container flex flex-row items-center border rounded-lg shadow-md p-2 mt-2" key={item.id_buku} onClick={() => detail(item)}>
                         <div className="container w-[40vw] mr-3">
                             <img src={item.gambar_buku} alt="Sampul Buku" className="w-full rounded-lg"/>
                         </div>
