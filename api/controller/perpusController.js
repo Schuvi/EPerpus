@@ -143,9 +143,7 @@ const perpusController = {
         try {
             await connection.beginTransaction()
 
-            const dipinjam = "Dipinjam"
-
-            const sql = `SELECT * FROM buku JOIN buku_status on buku.status_buku = buku_status.id_status WHERE buku_status.status = "${dipinjam}"`
+            const sql = `SELECT id_pinjaman, buku.judul_buku, DATE_FORMAT(tanggal_meminjam, '%Y-%m-%d') AS tanggal_meminjam, DATE_FORMAT(tanggal_mengembalikan, '%Y-%m-%d') AS tanggal_mengembalikan, user_data.nama_lengkap FROM buku_pinjaman JOIN buku ON buku_pinjaman.id_buku = buku.id_buku JOIN user_data ON buku_pinjaman.user_peminjam = user_data.id_user`
 
             const [result] = await connection.query(sql)
 
@@ -463,19 +461,20 @@ const perpusController = {
     pengembalianBuku: async (req, res) => {
         const connection = await pool.getConnection()
         try {
-            const {id} = req.query
+            const {id_buku, id_pinjaman} = req.query
 
             await connection.beginTransaction()
 
-            const sqlPinjam = `UPDATE buku SET status_buku = 1 WHERE id_buku = ${id}`
+            const sqlKembali = `UPDATE buku SET status_buku = 1 WHERE id_buku = ?`
+            const sqlHapusDaftar = `DELETE FROM buku_pinjaman WHERE id_pinjaman = ?`
 
-            const [result] = await connection.query(sqlPinjam)
+            await connection.query(sqlKembali, [id_buku])
+            await connection.query(sqlHapusDaftar, [id_pinjaman])
 
             await connection.commit()
 
             res.json({
-                message: "Berhasil Meminjam Buku",
-                affectedRows: result.affectedRows
+                message: "Berhasil Mengembalikan Buku"
             })
 
         } catch (error) {
@@ -548,18 +547,21 @@ const perpusController = {
             const sqlUpdateBanyakPinjam = `UPDATE buku SET banyak_pinjaman = banyak_pinjaman + 1 WHERE id_buku = ?`;
 
             const sqlUserBanyakPinjam = `UPDATE user_data SET banyak_meminjam = banyak_meminjam + 1 WHERE id_user = ?`
+
+            const sqlBukuPinjam = `INSERT INTO buku_pinjaman (id_buku, tanggal_meminjam, tanggal_mengembalikan, user_peminjam) VALUES (?, ?, ?, ?)`;
     
             for (const id_buku of buku_ids) {
                 await connection.query(sqlDetailTransaksi, [id_referensi, id_buku]);
                 await connection.query(sqlPinjam, [id_buku]);
                 await connection.query(sqlUpdateBanyakPinjam, [id_buku]);
-                await connection.query(sqlUserBanyakPinjam, [id_user])
+                await connection.query(sqlUserBanyakPinjam, [id_user]);
+                await connection.query(sqlBukuPinjam, [id_buku, tanggal_peminjaman, tanggal_pengembalian, id_user]);
             }
     
             await connection.commit();
     
             res.status(201).json({
-                message: "Berhasil Membuat Transaksi",
+                message: "Berhasil Meminjam Buku",
                 id_referensi
             });
         } catch (error) {

@@ -42,6 +42,10 @@ export default function DetailBooks() {
         favorite.mutate(formData)
     };
 
+    const pinjamBuku = (detail) => {
+        navigate("/buku/pinjam", {state: {buku: detail}})
+    }
+
     return (
         <>
             <div className="container p-2">
@@ -80,7 +84,7 @@ export default function DetailBooks() {
                     </div>
                 </div>
                 <div className="container mt-5 text-center">
-                    <button className={`border w-[40vw] h-[5vh] rounded-lg ${detail.status == "Dipinjam" ? "bg-slate-500" : detail.status == "Rusak" ? "bg-slate-500" : detail.status == "Tersedia" ? "bg-pallet1" : "bg-slate-500"} text-white hover:bg-slate-500`} onClick={() => navigate("/")} disabled={detail.status == "Dipinjam" ? true : detail.status == "Rusak" ? true : detail.status == "Tersedia" ? false : true}>{detail.status == "Tersedia" ? "Pinjam Buku" : detail.status == "Rusak" ? "Buku Rusak" : detail.status == "Dipinjam" ? "Buku Telah Dipinjam" : "Pinjam Buku"}</button>
+                    <button className={`border w-[40vw] h-[5vh] rounded-lg ${detail.status == "Dipinjam" ? "bg-slate-500" : detail.status == "Rusak" ? "bg-slate-500" : detail.status == "Tersedia" ? "bg-pallet1" : "bg-slate-500"} text-white hover:bg-slate-500`} onClick={() => pinjamBuku(detail)} disabled={detail.status == "Dipinjam" ? true : detail.status == "Rusak" ? true : detail.status == "Tersedia" ? false : true}>{detail.status == "Tersedia" ? "Pinjam Buku" : detail.status == "Rusak" ? "Buku Rusak" : detail.status == "Dipinjam" ? "Buku Telah Dipinjam" : "Pinjam Buku"}</button>
                 </div>
             </div>
         </>
