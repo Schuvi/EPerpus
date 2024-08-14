@@ -9,13 +9,10 @@ import CardAll from "../card_all";
 import AOS from "aos";
 import 'aos/dist/aos.css'
 import { useNavigate } from "react-router-dom";
-import CircularProgress, { circularProgressClasses } from '@mui/material/CircularProgress';
+import CircularProgress from '@mui/material/CircularProgress';
 import CardUser from "../card_user";
 
 export default function Home() {
-    const isLoggedIn = window.localStorage.getItem("isLoggedIn");
-    console.log(isLoggedIn)
-
     const base_url = import.meta.env.VITE_API_ENDPOINT
 
     const navigate = useNavigate();
@@ -26,7 +23,6 @@ export default function Home() {
 
     const getBuku = async () => {
         const response = await axios.get(base_url + "/get/books/popular");
-        console.log(response.data)
         return response.data;
     };
 
@@ -64,40 +60,40 @@ export default function Home() {
     return (
         <>
             <section className="flex flex-col items-center mt-1">
-                <div className="h-[20vh] w-[80vw]">
+                <div className="h-[20vh] w-[80vw] mt-3 md:h-[30vh]">
                     <Carousel>
-                        <img src={gambar1} alt="..." />
-                        <img src={gambar1} alt="..." />
-                        <img src={gambar1} alt="..." />
-                        <img src={gambar1} alt="..." />
-                        <img src={gambar1} alt="..." />
+                        <img src={gambar1} alt="Carousel 1" />
+                        <img src={gambar1} alt="Carousel 2" />
+                        <img src={gambar1} alt="Carousel 3" />
+                        <img src={gambar1} alt="Carousel 4" />
+                        <img src={gambar1} alt="Carousel 5" />
                     </Carousel>
                 </div>
             </section>
 
             <section className="flex flex-row justify-evenly mt-5 p-2">
                 <div className="container w-1/3 h-[10vh] flex flex-col justify-center items-center" onClick={() => {navigate("/buku")}}>
-                    <i className="fa-solid fa-book text-[2em] text-pallet1"></i>
-                    <h1 className="text-md text-center mt-1 tracking-tight">Buku Terbaru</h1>
+                    <i className="fa-solid fa-book text-[2em] text-pallet1 md:text-[3em]"></i>
+                    <h1 className="text-md text-center mt-2 tracking-tight md:text-xl">Buku Terbaru</h1>
                 </div>
                 <div className="container w-1/3 h-[10vh] flex flex-col justify-center items-center" onClick={() => {navigate("/search")}}>
-                    <i className="fa-solid fa-magnifying-glass text-[2em] text-pallet1"></i>
-                    <h1 className="text-md text-center mt-1 tracking-tight">Cari Buku</h1>
+                    <i className="fa-solid fa-magnifying-glass text-[2em] text-pallet1 md:text-[3em]"></i>
+                    <h1 className="text-md text-center mt-2 tracking-tight md:text-xl">Cari Buku</h1>
                 </div>
                 <div className="container w-1/3 h-[10vh] flex flex-col justify-center items-center" onClick={() => {navigate("/buku/favorit")}}>
-                    <i className="fa-solid fa-bookmark text-[2em] text-pallet1"></i>
-                    <h1 className="text-md text-center mt-1 tracking-tight">Favorit</h1>
+                    <i className="fa-solid fa-bookmark text-[2em] text-pallet1 md:text-[3em]"></i>
+                    <h1 className="text-md text-center mt-2 tracking-tight md:text-xl">Buku Favorit</h1>
                 </div>
             </section>
 
             <section data-aos = "fade-right" data-aos-once="true">
                 <div className="container flex p-3">
                     <div className="container w-full">
-                        <h1 className="font-bold text-xl">Koleksi Terpopuler</h1>
-                        <p className="text-sm">Koleksi yang paling banyak dipinjam</p>
+                        <h1 className="font-bold text-xl md:text-2xl">Koleksi Terpopuler</h1>
+                        <p className="text-sm md:text-lg">Koleksi yang paling banyak dipinjam</p>
                     </div>
-                    <div className="container text-end w-1/3">
-                        <Link to="/buku/populer" className="text-blue-500">Lihat Semua</Link>
+                    <div className="container w-1/3 flex items-center justify-end md:text-xl">
+                        <Link to="/buku/populer" className="text-blue-500 md:text-lg">Lihat Semua</Link>
                     </div>
                 </div>
 
@@ -107,11 +103,11 @@ export default function Home() {
             <section className="mt-2">
                 <div className="container flex p-3">
                     <div className="container w-full">
-                        <h1 className="font-bold text-xl">Koleksi Terbaru</h1>
-                        <p className="text-sm">Koleksi terbaru dari kami</p>
+                        <h1 className="font-bold text-xl md:text-2xl">Koleksi Terbaru</h1>
+                        <p className="text-sm md:text-lg">Koleksi terbaru dari kami</p>
                     </div>
-                    <div className="container text-end w-1/3">
-                        <Link to="buku" className="text-blue-500">Lihat Semua</Link>
+                    <div className="container w-1/3 flex items-center justify-end md:text-xl">
+                        <Link to="buku" className="text-blue-500 md:text-lg">Lihat Semua</Link>
                     </div>
                 </div>
 
@@ -121,8 +117,8 @@ export default function Home() {
             <section className="mt-2">
                 <div className="container flex p-3">
                     <div className="container w-full">
-                        <h1 className="font-bold text-xl">Anggota Peminjam Terbanyak</h1>
-                        <p>Top 3 Peminjam Terbanyak</p>
+                        <h1 className="font-bold text-xl md:text-2xl">Anggota Peminjam Terbanyak</h1>
+                        <p className="text-sm md:text-lg">Top 3 Peminjam Terbanyak</p>
                     </div>
                 </div>
 

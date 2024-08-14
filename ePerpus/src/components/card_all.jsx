@@ -8,7 +8,6 @@ export default function CardAll() {
     
     const getAllBuku = async () => {
         const response = await axios.get(base_url + "/get/books");
-        console.log(response.data)
         return response.data;
     };
 
@@ -28,12 +27,12 @@ export default function CardAll() {
                             <img src={item.gambar_buku} alt="Sampul Buku" className="w-[30vw]"/>
                         </div>
                         <div className="container">
-                            <h1 className="text-sm mb-3">{item.pengarang_buku}</h1>
-                            <h1 className="text-md mb-3 text-pallet1">{item.judul_buku}</h1>
+                            <h1 className="text-sm mb-3 md:text-lg">{item.pengarang_buku}</h1>
+                            <h1 className="text-md mb-3 text-pallet1 md:text-2xl">{item.judul_buku}</h1>
                         </div>
                         <div className="container h-full flex flex-col justify-end">
-                            <h1 className="text-sm">{item.penerbit_buku}</h1>
-                            <h1 className={`text-sm ${item.status == "Dipinjam" ? "text-blue-500" : item.status == "Tersedia" ? "text-green-500" : item.status == "Rusak" ? "text-red-500" : "text-red-300"}`}>{item.status}</h1>
+                            <h1 className="text-sm md:text-lg">{item.penerbit_buku}</h1>
+                            <h1 className={`text-sm ${item.status == "Dipinjam" ? "text-blue-500" : item.status == "Tersedia" ? "text-green-500" : item.status == "Rusak" ? "text-red-500" : "text-red-300"} md:text-lg`}>{item.status}</h1>
                         </div>
                     </div>
                 ))}

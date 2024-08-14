@@ -120,10 +120,10 @@ export default function Register() {
         <>
             <section className="flex justify-center items-center mt-5 p-2">
                 <div className="container bg-pallet1 shadow-xl h-full rounded-lg p-3">
-                    <h1 className="text-center text-lg font-bold mb-3 text-white">Register Akun Baru</h1>
+                    <h1 className="text-center text-lg font-bold mb-3 text-white md:text-2xl">Register Akun Baru</h1>
 
                     <form onSubmit={handleSubmit} className="flex flex-col justify-evenly h-[57vh]">
-                        <label htmlFor="id_user" className="after:content-['*'] after:ml-0.5 after:text-red-700 text-white">
+                        <label htmlFor="id_user" className="after:content-['*'] after:ml-0.5 after:text-red-700 text-white md:text-lg">
                             ID Pengguna
                         </label>
                         <input 
@@ -136,7 +136,7 @@ export default function Register() {
                             onChange={handleChange}
                             required
                         />
-                        <label htmlFor="nama_lengkap" className="after:content-['*'] after:ml-0.5 after:text-red-700 text-white">
+                        <label htmlFor="nama_lengkap" className="after:content-['*'] after:ml-0.5 after:text-red-700 text-white md:text-lg">
                             Nama Lengkap
                         </label>
                         <input 
@@ -149,7 +149,7 @@ export default function Register() {
                             onChange={handleChange}
                             required
                         />
-                        <label htmlFor="email" className="after:content-['*'] after:ml-0.5 after:text-red-700 text-white">
+                        <label htmlFor="email" className="after:content-['*'] after:ml-0.5 after:text-red-700 text-white md:text-lg">
                             Email
                         </label>
                         <input 
@@ -162,7 +162,7 @@ export default function Register() {
                             onChange={handleChange}
                             required
                         />
-                        <label htmlFor="password" className="after:content-['*'] after:ml-0.5 after:text-red-700 text-white" min="8">
+                        <label htmlFor="password" className="after:content-['*'] after:ml-0.5 after:text-red-700 text-white md:text-lg" min="8">
                             Password
                         </label>
                         <input 
@@ -178,11 +178,11 @@ export default function Register() {
                         />
                         <div className="container">
                             <input type="checkbox" id="check-pass" className="mr-3" onClick={isShowPass}/>
-                            <label htmlFor="check-pass" className="text-white">
+                            <label htmlFor="check-pass" className="text-white md:text-lg">
                                 Tampilkan Password
                             </label>
                         </div>
-                        <label htmlFor="gambar_profil" className="text-white">
+                        <label htmlFor="gambar_profil" className="text-white md:text-lg">
                             Gambar Profile (Anda Bisa Mengaturnya Nanti)
                         </label>
                         <input 
@@ -194,11 +194,11 @@ export default function Register() {
                         <input type="text" name="role" id="role" hidden value={data.role} onChange={handleChange}/>
 
                         <div className="container text-center mt-3">
-                            <Link to="/login" className="text-white hover:text-pallet3">Sudah Memiliki Akun? Login Disini</Link>
+                            <Link to="/login" className="text-white hover:text-pallet3 md:text-lg">Sudah Memiliki Akun? Login Disini</Link>
                         </div>
 
                         <div className="container text-center mt-3">
-                            <button type="submit" className="border w-[25vw] rounded-lg bg-pallet1 text-white">
+                            <button type="submit" className="border w-[25vw] rounded-lg bg-pallet1 text-white p-2 md:text-lg">
                                 Submit
                             </button>
                         </div>

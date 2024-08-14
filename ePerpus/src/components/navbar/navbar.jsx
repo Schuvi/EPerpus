@@ -24,13 +24,13 @@ export default function Navbar() {
         if (isOpen == true) {
             setIsToggleClick(
                 <>
-                    ☰
+                    <i className="fa-solid fa-bars"></i>
                 </>
             )
         } else {
             setIsToggleClick(
                 <>
-                    <i class="fa-solid fa-xmark"></i>
+                    <i className="fa-solid fa-xmark"></i>
                 </>
             )
         }
@@ -50,13 +50,13 @@ export default function Navbar() {
                 if (isOpen == true) {
                     setIsToggleClick(
                         <>
-                            ☰
+                            <i className="fa-solid fa-bars"></i>
                         </>
                     )
                 } else {
                     setIsToggleClick(
                         <>
-                            <i class="fa-solid fa-xmark"></i>
+                            <i className="fa-solid fa-xmark"></i>
                         </>
                     )
                 }

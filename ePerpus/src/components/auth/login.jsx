@@ -80,29 +80,29 @@ export default function Login() {
         <>
             <section className="p-2 h-[60vh] flex justify-center items-center">
                 <div className="container bg-pallet1 rounded-lg p-2 h-[38vh] flex flex-col justify-center items-center">
-                    <h1 className="text-white text-center text-lg font-bold">Login Akun</h1>
+                    <h1 className="text-white text-center text-lg md:text-2xl font-bold">Login Akun</h1>
                 
                     <form className="container flex flex-col justify-evenly h-[30vh]" onSubmit={handleSubmit}>
-                        <label htmlFor="nama_lengkap" className="after:content-['*'] after:ml-1 after:text-red-700 text-white">
+                        <label htmlFor="nama_lengkap" className="after:content-['*'] after:ml-1 after:text-red-700 text-white md:text-lg">
                             Nama Lengkap
                         </label>
                         <input type="text" name="username" id="nama_lengkap" placeholder="Masukkan Nama Lengkap Anda" value={data.username} onChange={handleChange} required className="rounded-xl"/>
 
-                        <label htmlFor="password" className="text-white after:content-['*'] after:text-red-700 after:ml-1">
+                        <label htmlFor="password" className="text-white after:content-['*'] after:text-red-700 after:ml-1 md:text-xl">
                             Password
                         </label>
                         <input type={showPass ? "text" : "password"} name="password" id="password" placeholder="Masukkan Password Anda" value={data.password} className="rounded-xl" onChange={handleChange} autoComplete="off" required minLength={8}/>
                         <div className="container flex items-center mt-2">
                             <input type="checkbox" id="tampil" onClick={() => setShowPass(!showPass)}/>
-                            <label htmlFor="tampil" className="text-white ml-1">Tampilkan Password</label>
+                            <label htmlFor="tampil" className="text-white ml-1 md:text-xl">Tampilkan Password</label>
                         </div>
 
                         <div className="container text-center mt-2">
-                            <Link to="/register" className="text-white hover:text-pallet3">Belum Punya Akun? Register Disini</Link>
+                            <Link to="/register" className="text-white hover:text-pallet3 md:text-xl">Belum Punya Akun? Register Disini</Link>
                         </div>
 
                         <div className="container text-center mt-2">
-                           <button type="submit" className="border rounded-xl w-[35vw] h-[5vh] text-white">
+                           <button type="submit" className="border rounded-xl w-[35vw] h-[5vh] text-white md:text-2xl">
                                 Login
                             </button>
                         </div>

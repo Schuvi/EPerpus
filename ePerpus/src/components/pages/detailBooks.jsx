@@ -56,15 +56,15 @@ export default function DetailBooks() {
             <div className="container mt-5 p-2">
                 <div className="container flex justify-between">
                     <div className="container">
-                        <h1 className="text-sm text-gray-400">{detail.pengarang_buku}</h1>
-                        <h1 className="text-2xl text-pallet2 font-bold">{detail.judul_buku}</h1>
-                        <h1 className={`${detail.status == "Dipinjam" ? "text-blue-500" : detail.status == "Tersedia" ? "text-green-500" : detail.status == "Rusak" ? "text-red-500" : "text-red-300"}`}>{detail.status}</h1>
+                        <h1 className="text-sm text-gray-400 md:text-lg">{detail.pengarang_buku}</h1>
+                        <h1 className="text-2xl text-pallet2 font-bold md:text-3xl">{detail.judul_buku}</h1>
+                        <h1 className={`${detail.status == "Dipinjam" ? "text-blue-500" : detail.status == "Tersedia" ? "text-green-500" : detail.status == "Rusak" ? "text-red-500" : "text-red-300"} md:text-lg`}>{detail.status}</h1>
                     </div>
                     <form onSubmit={handleSubmit} className="container flex flex-col justify-end text-end p-2">
                         <button type="submit" className="text-end">
-                            <i className={`fa-solid fa-bookmark text-[2em] mr-9 text-pallet2`}></i>
+                            <i className={`fa-solid fa-bookmark text-[2em] mr-9 text-pallet2 md:text-[2.5em]`}></i>
                         </button>
-                            <h1>Jadikan Favorit</h1>
+                            <h1 className="md:text-lg">Jadikan Favorit</h1>
                     </form> 
                 </div>
                 <div className="container flex flex-col justify-between mt-5">
