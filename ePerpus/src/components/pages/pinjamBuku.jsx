@@ -1,11 +1,12 @@
 import { useMutation } from "@tanstack/react-query";
 import axios from "axios";
 import React, {useState} from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 export default function BorrowBooks() {
     const location = useLocation();
     const {buku} = location.state
+    const navigate = useNavigate()
 
     const [durasi, setDurasi] = useState("");
     const [tanggalPengembalian, setTanggalPengembalian] = useState("");
@@ -47,6 +48,7 @@ export default function BorrowBooks() {
         onSuccess: (data) => {
             if (data.message === "Berhasil Meminjam Buku") {
                 alert("Berhasil Meminjam Buku")
+                navigate("/buku/pinjam/invoice", {state: {invoice: {id_buku: buku.id_buku, id_referensi: data.id_referensi, judul_buku: buku.judul_buku, gambar_buku: buku.gambar_buku}}})
             }
         },
         onError: (error) => {

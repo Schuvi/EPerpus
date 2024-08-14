@@ -11,6 +11,10 @@ import Login from "./components/auth/login";
 import DetailBooks from "./components/pages/detailBooks";
 import FavoriteBooks from "./components/pages/favoriteBooks";
 import BorrowBooks from "./components/pages/pinjamBuku";
+import Invoice from "./components/pages/invoice";
+import Employee from "./components/pages/pustakawan";
+import Profile from "./components/pages/profile";
+import EditProfile from "./components/pages/editProfile";
 import ProtectedRoute from "./components/auth/ProtectedRoute";
 import RedirectLoggedIn from "./components/auth/redirectLogged";
 import { Route, Routes, Navigate } from "react-router-dom";
@@ -45,6 +49,9 @@ export default function App() {
                   <Route path="/buku/populer" element={<BookPopular />}/>
                   <Route path="/buku/favorit" element={<FavoriteBooks />}/>
                   <Route path="/buku/pinjam" element={<BorrowBooks />}/>
+                  <Route path="/buku/pinjam/invoice" element={<Invoice />}/>
+                  <Route path="/profile" element={<Profile />}/>
+                  <Route path="/profile/edit" element={<EditProfile />}/>
 
                 </Route>
 
@@ -55,6 +62,8 @@ export default function App() {
 
                 <Route path="*" element={<div>Halaman Tidak ada</div>}/>
                 <Route path="/" element={<Home />}/>
+                <Route path="/pustakawan" element={<Employee />}/>
+
               </Routes>
             </div>
             <Footer/> 

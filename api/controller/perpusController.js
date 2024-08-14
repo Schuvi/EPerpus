@@ -583,13 +583,13 @@ const perpusController = {
             
             await connection.beginTransaction()
 
-            const sql = "SELECT * FROM user_data WHERE id_user = ?"
+            const sql = `SELECT * FROM user_data WHERE id_user = ?`
 
             const [result] = await connection.query(sql, [id_user])
 
             await connection.commit()
             
-            if (result.length <= 1) {
+            if (result.length < 1) {
                 res.status(404).json({
                     state: "error",
                     message: "User tidak ditemukan"
@@ -616,7 +616,33 @@ const perpusController = {
         try {
             await connection.beginTransaction()
 
-            const sql = "SELECT user_data.id_user, user_data.nama_lengkap, user_data.email, user_data.role, user_status.status_user FROM user_data JOIN user_status ON user_data.status = user_status.id"
+            const sql = "SELECT user_data.id_user, user_data.nama_lengkap, user_data.email, user_data.role, user_status.status_user FROM user_data JOIN user_status ON user_data.status = user_status.id WHERE user_data.role = 'user'"
+
+            const [result] = await connection.query(sql)
+
+            await connection.commit()
+
+            res.json({
+                state: "Berhasil Mengambil Data User",
+                data: result
+            })
+        } catch (error) {
+            console.error(error)
+            res.status(500).json({
+                state: "error",
+                message: "Gagal Mengambil Data User"
+            })
+        } finally {
+            connection.release();
+        }
+    },
+
+    getAdmin: async (req, res) => {
+        const connection = await pool.getConnection()
+        try {
+            await connection.beginTransaction()
+
+            const sql = "SELECT user_data.id_user, user_data.nama_lengkap, user_data.email, user_data.role, user_data.gambar_profil, user_status.status_user FROM user_data JOIN user_status ON user_data.status = user_status.id WHERE user_data.role = 'admin'"
 
             const [result] = await connection.query(sql)
 
@@ -861,27 +887,25 @@ const perpusController = {
                 if (err) {
                     return res.status(500).json({ state: 'error', error: err.message });
                 }
-                
-                const {id_user} = req.query
-
-                const { nama_lengkap, email, password, role } = req.body;
     
-                const hashedPassword = await bcrypt.hash(password, 10);
+                const { id_user } = req.query;
+                const { nama_lengkap, email, password, role } = req.body;
     
                 await connection.beginTransaction();
     
-                // Fetch the current profile image path
-                const sqlSelectImage = "SELECT gambar_profil FROM user_data WHERE id_user = ?;";
-                const [rows] = await connection.query(sqlSelectImage, [id_user]);
+                // Fetch the current user data
+                const sqlSelectUser = "SELECT * FROM user_data WHERE id_user = ?;";
+                const [rows] = await connection.query(sqlSelectUser, [id_user]);
     
                 if (rows.length === 0) {
                     throw new Error('User tidak ditemukan');
                 }
     
-                const oldImagePath = rows[0].gambar_profil;
+                const oldUserData = rows[0];
+                const oldImagePath = oldUserData.gambar_profil;
                 let newImagePath = oldImagePath;
     
-                // If a new image is uploaded, update the image path and delete the old image
+                // Handle profile image update
                 if (req.files && req.files['gambar_profil']) {
                     newImagePath = `/user/${req.files['gambar_profil'][0].filename}`;
     
@@ -897,15 +921,20 @@ const perpusController = {
                     }
                 }
     
-                const sqlUpdateUser = `UPDATE user_data SET nama_lengkap = ?, email = ?, password = ?, gambar_profil = ?, banyak_pinjaman = ?, role = ? WHERE id_user = ?;`;
+                let hashedPassword = oldUserData.password;
+                if (password) {
+                    hashedPassword = await bcrypt.hash(password, 10);
+                }
     
-                await connection.query(sqlUpdateUser, [nama_lengkap, email, hashedPassword, newImagePath, banyak_pinjaman, role, id_user]);
+                const sqlUpdateUser = `UPDATE user_data SET nama_lengkap = ?, email = ?, password = ?, gambar_profil = ?, role = ? WHERE id_user = ?;`;
+    
+                await connection.query(sqlUpdateUser, [nama_lengkap, email, hashedPassword, newImagePath, role, id_user]);
     
                 await connection.commit();
     
                 res.json({
                     message: "Berhasil Mengedit User",
-                    id_user
+                    data: { id_user, nama_lengkap, email, password: hashedPassword, role }
                 });
             });
         } catch (error) {

@@ -79,8 +79,8 @@ export default function Navbar() {
                     <div className="container w-full flex justify-evenly border-r-2 mr-2">
                         <Link to="/">Beranda</Link>
                         <Link to="/buku">Koleksi Buku</Link>
-                        <Link to="#">Pustakawan</Link>
-                        <Link to="#">Profile</Link>
+                        <Link to="/pustakawan">Pustakawan</Link>
+                        <Link to="/profile">Profile</Link>
                     </div>
 
                     {isLoggedIn ? (
@@ -119,10 +119,10 @@ export default function Navbar() {
                                 <Link to="/buku" onClick={toggleMenu}>Koleksi Buku</Link>
                             </div>
                             <div className="p-2 hover:bg-pallet1 hover:text-white">
-                                <Link to="#" onClick={toggleMenu}>Pustakawan</Link>
+                                <Link to="/pustakawan" onClick={toggleMenu}>Pustakawan</Link>
                             </div>
                             <div className="p-2 hover:bg-pallet1 hover:text-white">
-                                <Link to="#" onClick={toggleMenu}>Bantuan</Link>
+                                <Link to="/profile" onClick={toggleMenu}>Profile</Link>
                             </div>
 
                             {isLoggedIn ? (

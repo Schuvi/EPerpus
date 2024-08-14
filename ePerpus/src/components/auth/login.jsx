@@ -78,11 +78,11 @@ export default function Login() {
 
     return (
         <>
-            <section className="p-2 h-[51.1vh] flex items-center">
-                <div className="container bg-pallet1 rounded-lg p-2 h-[38vh] flex flex-col items-center">
+            <section className="p-2 h-[60vh] flex justify-center items-center">
+                <div className="container bg-pallet1 rounded-lg p-2 h-[38vh] flex flex-col justify-center items-center">
                     <h1 className="text-white text-center text-lg font-bold">Login Akun</h1>
                 
-                    <form className="container flex flex-col justify-evenly" onSubmit={handleSubmit}>
+                    <form className="container flex flex-col justify-evenly h-[30vh]" onSubmit={handleSubmit}>
                         <label htmlFor="nama_lengkap" className="after:content-['*'] after:ml-1 after:text-red-700 text-white">
                             Nama Lengkap
                         </label>
