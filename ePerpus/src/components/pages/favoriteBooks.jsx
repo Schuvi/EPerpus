@@ -57,7 +57,7 @@ export default function FavoriteBooks() {
           <h1 className="text-center mt-2">Belum Ada Buku Ditambahkan Ke Favorit</h1>
         </div>
         {data?.data?.map((item) => (
-          <div className="container flex flex-row items-center border rounded-lg shadow-md p-2 mt-2" key={item.id_buku} onClick={() => detail(item)}>
+          <div className="container flex flex-row items-center border rounded-lg shadow-md p-2 mt-2" key={item.id_buku}>
             <div className="container w-[40vw] mr-3">
               <img src={item.gambar_buku} alt="Sampul Buku" className="w-full rounded-lg" />
             </div>
@@ -69,7 +69,10 @@ export default function FavoriteBooks() {
               </div>
 
               <div className="container flex justify-end items-end h-1/2">
-                <button type="button" className="bg-red-700 text-white w-[15vw] rounded-md" onClick={() => handleDelete(item.id_favorit)}>
+                <button onClick={() => detail(item)} type="button" className="bg-pallet2 rounded-md p-1 text-white mr-2">
+                  Lihat Buku
+                </button>
+                <button type="button" className="bg-red-700 text-white p-1 rounded-md" onClick={() => handleDelete(item.id_favorit)}>
                   Hapus
                 </button>
               </div>

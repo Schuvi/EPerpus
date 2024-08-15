@@ -13,6 +13,7 @@ export default function Navbar() {
     const navigate = useNavigate()
 
     const isLoggedIn = window.localStorage.getItem("isLoggedIn")
+    const role = window.localStorage.getItem("role")
 
     const base_url = import.meta.env.VITE_API_ENDPOINT
 
@@ -71,17 +72,29 @@ export default function Navbar() {
     return (
         <>
             <nav className="bg-pallet2 h-[10vh] w-full flex justify-center items-center p-5">
-                <div className="container w-1/2 flex justify-center items-center">
-                    <img src={logo} alt="logo TechLibrary" className="w-[8vw] mr-3"/>
+                <div className="container w-1/2 flex justify-center items-center xl:justify-start">
+                    <img src={logo} alt="logo TechLibrary" className="w-[8vw] mr-3 xl:w-[5vw]"/>
                     <h1 className="font-bold tracking-widest text-2xl">TechLibrary</h1>
                 </div>
                 <div className="container w-1/2 hidden md:hidden lg:flex xl:flex 2xl:flex">
-                    <div className="container w-full flex justify-evenly border-r-2 mr-2">
-                        <Link to="/">Beranda</Link>
-                        <Link to="/buku">Koleksi Buku</Link>
-                        <Link to="/pustakawan">Pustakawan</Link>
-                        <Link to="/profile">Profile</Link>
-                    </div>
+                    {isLoggedIn && role == "admin" ? (
+                        <>
+                            <div className="container w-full flex justify-evenly border-r-2 mr-2">
+                                <Link to="/admin/dashboard">Dashboard</Link>
+                                <Link to="/buku">Menu Buku</Link>
+                                <Link to="/pustakawan">Menu User</Link>
+                            </div>
+                        </>
+                    ) : (
+                        <>
+                            <div className="container w-full flex justify-evenly border-r-2 mr-2">
+                                <Link to="/">Beranda</Link>
+                                <Link to="/buku">Koleksi Buku</Link>
+                                <Link to="/pustakawan">Pustakawan</Link>
+                                <Link to="/profile">Profile</Link>
+                            </div>
+                        </>
+                    )}
 
                     {isLoggedIn ? (
                                 <>
@@ -100,8 +113,6 @@ export default function Navbar() {
                                 </>
                     )}
                 </div>
-
-                
 
                 <div className="container flex justify-end md:flex lg:hidden xl:hidden 2xl:hidden">
                     <button onClick={toggleMenu} className="text-xl">

@@ -30,6 +30,7 @@ export default function Login() {
                 window.localStorage.setItem("token", data.data)
                 window.localStorage.setItem("id_user", data.data.id_user)
                 window.localStorage.setItem("profile", data.data.gambar_profil)
+                window.localStorage.setItem("role", data.data.role)
                 window.localStorage.setItem("isLoggedIn", true)
                 
                 axios.put(base_url + `/stat/login?id_user=${data.data.id_user}`)
@@ -43,7 +44,22 @@ export default function Login() {
                 })
 
             } else if (data.message === "Berhasil Login sebagai Admin") {
-                alert(`Selamat Datang Admin ${data.data.nama_lengkap}`)
+                window.localStorage.setItem("username", data.data.nama_lengkap)
+                window.localStorage.setItem("token", data.data)
+                window.localStorage.setItem("id_user", data.data.id_user)
+                window.localStorage.setItem("profile", data.data.gambar_profil)
+                window.localStorage.setItem("role", data.data.role)
+                window.localStorage.setItem("isLoggedIn", true)
+                
+                axios.put(base_url + `/stat/login?id_user=${data.data.id_user}`)
+                .then((res) => {
+                    if (res.data.message === "Berhasil Login") {
+                        alert(`Selamat Datang Admin ${data.data.nama_lengkap}`)
+                        navigate("/admin/dashboard")
+                    } else {
+                        alert("Gagal Login")
+                    }
+                })
             } else if (data.message === "Password salah") {
                 alert("Password salah, silahkan hubungi admin jika anda lupa akan password anda")
             } else if (data.message === "User tidak ditemukan") {
@@ -79,7 +95,7 @@ export default function Login() {
     return (
         <>
             <section className="p-2 h-[60vh] flex justify-center items-center">
-                <div className="container bg-pallet1 rounded-lg p-2 h-[38vh] flex flex-col justify-center items-center">
+                <div className="container bg-pallet1 rounded-lg p-2 h-[38vh] flex flex-col justify-center items-center xl:h-[50vh]">
                     <h1 className="text-white text-center text-lg md:text-2xl font-bold">Login Akun</h1>
                 
                     <form className="container flex flex-col justify-evenly h-fit" onSubmit={handleSubmit}>

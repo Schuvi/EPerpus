@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { useMutation, useQuery } from "@tanstack/react-query";
@@ -6,18 +6,21 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 export default function DetailBooks() {
     const location = useLocation();
     const {detail} = location.state
+
     const navigate = useNavigate()
+
+    console.log(detail.id_buku)
 
     const user = window.localStorage.getItem("id_user")
 
     const base_url = import.meta.env.VITE_API_ENDPOINT
 
     const fetch = async () => {
-        const response = await axios.get(base_url + `/get/books/fav?id_user=${id_user}`);
+        const response = await axios.get(base_url + `/get/books/fav?id_user=${user}`);
         return response.data;
     };
 
-    const { data } = useQuery({
+    const { data, isLoading, isError } = useQuery({
         queryKey: ["favorite-books"],
         queryFn: fetch,
     });
@@ -36,6 +39,7 @@ export default function DetailBooks() {
             console.log(data)
             if (data.message == "Berhasil menambahkan buku ke favorit") {
                 alert("Berhasil menambah buku ke Favorit")
+                navigate("/buku/favorit")
             } else if (data.message == "Buku telah menjadi favorit") {
                 alert("Buku Sudah Menjadi Favorit");
             }
@@ -79,7 +83,7 @@ export default function DetailBooks() {
                         <button type="submit" className="text-end">
                             <i className={`fa-solid fa-bookmark text-[2em] mr-9 text-pallet2 md:text-[2.5em]`}></i>
                         </button>
-                            <h1 className={`md:text-lg`}>{data.data.find(book => book.id_buku === detail.id_buku) ? "Buku Favorit" : "Jadikan Favorit"}</h1>
+                            <h1 className={`md:text-lg`}> {isLoading ? "Loading..." : isError ? "Error loading data": data?.data?.find(book => book.id_buku === detail.id_buku) ? "Sudah Favorit" : "Jadikan Favorit"}</h1>
                     </form> 
                 </div>
                 <div className="container flex flex-col justify-between mt-5">

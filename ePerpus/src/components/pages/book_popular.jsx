@@ -36,7 +36,7 @@ export default function BookPopular() {
         <>
             <div className="container text-center">
                 <h1 className="text-2xl font-bold mb-2 mt-5">Daftar Buku Terpopuler</h1>
-                <button className="border w-[20vw] rounded-lg bg-pallet1 text-white mb-5" onClick={() => navigate("/search")}>
+                <button className="border w-[28vw] rounded-lg bg-pallet1 text-white mb-5 p-2 md:text-lg" onClick={() => navigate("/search")}>
                     Cari Buku
                 </button>
             </div>
