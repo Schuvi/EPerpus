@@ -48,6 +48,9 @@ export default function Profile() {
 
                                 <h1 className="font-bold">Email :</h1>
                                 <h1>{item.email}</h1>
+
+                                <h1 className="font-bold">Jumlah Peminjaman Buku :</h1>
+                                <h1>{item.banyak_meminjam} Kali</h1>
                             </div>
                         </>
                     ))}

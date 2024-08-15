@@ -1,7 +1,7 @@
 import React, {useState} from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 
 export default function DetailBooks() {
     const location = useLocation();
@@ -12,6 +12,17 @@ export default function DetailBooks() {
 
     const base_url = import.meta.env.VITE_API_ENDPOINT
 
+    const fetch = async () => {
+        const response = await axios.get(base_url + `/get/books/fav?id_user=${id_user}`);
+        return response.data;
+    };
+
+    const { data } = useQuery({
+        queryKey: ["favorite-books"],
+        queryFn: fetch,
+    });
+    
+
     const favorite = useMutation({
         mutationFn: async (formData) => {
             const response = await axios.post(base_url+ "/favorite", formData, {
@@ -19,16 +30,20 @@ export default function DetailBooks() {
                     "Content-Type": "application/json"
                 }
             })
-
             return response.data
         },
         onSuccess: (data) => {
+            console.log(data)
             if (data.message == "Berhasil menambahkan buku ke favorit") {
                 alert("Berhasil menambah buku ke Favorit")
+            } else if (data.message == "Buku telah menjadi favorit") {
+                alert("Buku Sudah Menjadi Favorit");
             }
         },
         onError: (error) => {
-            alert("Gagal menambah buku ke Favorit")
+            if (error) {
+                alert("Gagal menambah buku ke Favorit")
+            }
         }
     });
 
@@ -64,7 +79,7 @@ export default function DetailBooks() {
                         <button type="submit" className="text-end">
                             <i className={`fa-solid fa-bookmark text-[2em] mr-9 text-pallet2 md:text-[2.5em]`}></i>
                         </button>
-                            <h1 className="md:text-lg">Jadikan Favorit</h1>
+                            <h1 className={`md:text-lg`}>{data.data.find(book => book.id_buku === detail.id_buku) ? "Buku Favorit" : "Jadikan Favorit"}</h1>
                     </form> 
                 </div>
                 <div className="container flex flex-col justify-between mt-5">

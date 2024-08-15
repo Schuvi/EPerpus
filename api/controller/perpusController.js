@@ -110,7 +110,7 @@ const perpusController = {
 
             const {id_user} = req.query
 
-            const sql = "SELECT id_favorit, buku_favorit.id_user, buku.judul_buku, buku.gambar_buku, buku.pengarang_buku, buku.id_buku, buku.penerbit_buku, buku.tahun_buku, buku.file_buku, buku.banyak_pinjaman FROM buku_favorit JOIN buku ON buku_favorit.id_buku = buku.id_buku WHERE id_user = ?"
+            const sql = "SELECT id_favorit, buku_favorit.id_user, buku.judul_buku, buku.gambar_buku, buku.pengarang_buku, buku.id_buku, buku.penerbit_buku, buku.tahun_buku, buku.file_buku, buku.banyak_pinjaman, buku_status.status, buku.deskripsi_buku FROM buku_favorit JOIN buku ON buku_favorit.id_buku = buku.id_buku JOIN buku_status ON buku.status_buku = buku_status.id_status WHERE id_user = ?"
 
             const [result] = await connection.query(sql, [id_user])
 
@@ -168,20 +168,31 @@ const perpusController = {
         const connection = await pool.getConnection()
         try {
             await connection.beginTransaction()
-
-            const {id_buku, id_user} = req.body
-
+    
+            const { id_buku, id_user } = req.body
+    
+            const sqlFavorite = "SELECT * FROM buku_favorit WHERE id_user = ? AND id_buku = ?"
+    
             const sql = "INSERT INTO buku_favorit (id_user, id_buku) VALUES (?, ?)"
-
-            const [result] =  await connection.query(sql, [id_user, id_buku])
-
-            await connection.commit()
-            
-            res.status(200).json({
-                message: "Berhasil menambahkan buku ke favorit"
-            })
-
+    
+            const [result] = await connection.query(sqlFavorite, [id_user, id_buku])
+    
+            if (result.length > 0) {
+                res.json({
+                    state: "error",
+                    message: "Buku telah menjadi favorit"
+                })
+            } else {
+                await connection.query(sql, [id_user, id_buku])
+                await connection.commit()
+    
+                res.status(200).json({
+                    message: "Berhasil menambahkan buku ke favorit"
+                })
+            }
+    
         } catch (error) {
+            await connection.rollback()
             console.error(error)
             res.status(500).json({
                 state: "error",
@@ -528,7 +539,6 @@ const perpusController = {
                 INSERT INTO transaksi (id_referensi, id_user, tanggal_peminjaman, tanggal_pengembalian, quantity)
                 VALUES (?, ?, ?, ?, ?);
             `;
-    
             await connection.query(sqlTransaksi, [
                 id_referensi,
                 id_user,
@@ -545,12 +555,19 @@ const perpusController = {
             const sqlPinjam = `UPDATE buku SET status_buku = 2 WHERE id_buku = ?`;
     
             const sqlUpdateBanyakPinjam = `UPDATE buku SET banyak_pinjaman = banyak_pinjaman + 1 WHERE id_buku = ?`;
-
+    
             const sqlUserBanyakPinjam = `UPDATE user_data SET banyak_meminjam = banyak_meminjam + 1 WHERE id_user = ?`
-
+    
             const sqlBukuPinjam = `INSERT INTO buku_pinjaman (id_buku, tanggal_meminjam, tanggal_mengembalikan, user_peminjam) VALUES (?, ?, ?, ?)`;
     
             for (const id_buku of buku_ids) {
+                const sqlCheckBook = `SELECT status_buku FROM buku WHERE id_buku = ? FOR UPDATE`;
+                const [bookStatus] = await connection.query(sqlCheckBook, [id_buku]);
+    
+                if (bookStatus[0].status_buku !== 1) { // Assuming 1 is available, 2 is borrowed
+                    throw new Error(`Buku ini telah dipinjam`);
+                }
+    
                 await connection.query(sqlDetailTransaksi, [id_referensi, id_buku]);
                 await connection.query(sqlPinjam, [id_buku]);
                 await connection.query(sqlUpdateBanyakPinjam, [id_buku]);

@@ -122,7 +122,7 @@ export default function Register() {
                 <div className="container bg-pallet1 shadow-xl h-full rounded-lg p-3">
                     <h1 className="text-center text-lg font-bold mb-3 text-white md:text-2xl">Register Akun Baru</h1>
 
-                    <form onSubmit={handleSubmit} className="flex flex-col justify-evenly h-[57vh]">
+                    <form onSubmit={handleSubmit} className="flex flex-col justify-evenly h-fit">
                         <label htmlFor="id_user" className="after:content-['*'] after:ml-0.5 after:text-red-700 text-white md:text-lg">
                             ID Pengguna
                         </label>

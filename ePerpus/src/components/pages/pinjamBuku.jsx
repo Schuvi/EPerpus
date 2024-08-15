@@ -42,17 +42,20 @@ export default function BorrowBooks() {
                     "Content-Type": "application/json",
                 }
             })
-
             return response.data
         },
         onSuccess: (data) => {
+            console.log(data)
             if (data.message === "Berhasil Meminjam Buku") {
                 alert("Berhasil Meminjam Buku")
                 navigate("/buku/pinjam/invoice", {state: {invoice: {id_buku: buku.id_buku, id_referensi: data.id_referensi, judul_buku: buku.judul_buku, gambar_buku: buku.gambar_buku}}})
             }
         },
         onError: (error) => {
-            alert("Gagal Meminjam Buku")
+            if (error) {
+                alert("Buku Telah Dipinjam")
+                navigate("/")
+            }
         }
     })
 
