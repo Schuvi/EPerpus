@@ -98,7 +98,15 @@ export default function DetailBooks() {
                         <h3>Penerbit Buku : {detail.penerbit_buku}</h3>
                         <h3>Tahun Terbit : {detail.tahun_buku}</h3>
                         <h3>Baca Online :</h3>
-                        <a href={detail.file_buku} target="_blank" className="text-blue-500">{detail.file_buku}</a>
+                        {detail.file_buku == null ? (
+                            <>
+                                <h1 className="italic">Buku Belum Tersedia Secara Online</h1>
+                            </>
+                        ) : (
+                            <>
+                                <a href={detail.file_buku} target="_blank" className="text-blue-500">{detail.file_buku}</a>
+                            </>
+                        )}
                         <h3>Telah Dipinjam : {detail.banyak_pinjaman} kali</h3>
                     </div>
                 </div>

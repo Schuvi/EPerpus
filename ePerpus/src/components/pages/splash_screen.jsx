@@ -27,7 +27,7 @@ export default function Splash() {
             <div className="flex flex-col justify-center items-center h-[100vh]">
                 <div className="container flex items-center justify-center mb-5">
                     <animated.div style={{ ...springs }}>
-                        <img src={logo} alt="logo perpustakaan" className="w-[30vw] md:w-[40vw]"/>
+                        <img src={logo} alt="logo perpustakaan" className="w-[30vw] md:w-[40vw] xl:w-[15vw]"/>
                     </animated.div>
                 </div>
                 <div className="container text-center">
