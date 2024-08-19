@@ -396,6 +396,7 @@ const perpusController = {
                 const { id_buku, judul_buku, pengarang_buku, penerbit_buku, tahun_buku, status_buku, deskripsi_buku, kategori_buku, genre, file_buku, banyak_pinjaman } = req.body;
     
                 await connection.beginTransaction();
+                console.log(id_buku)
     
                 // Fetch the current book image path
                 const sqlSelectImage = "SELECT gambar_buku FROM buku WHERE id_buku = ?;";

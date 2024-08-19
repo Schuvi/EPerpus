@@ -1,10 +1,9 @@
-import React, { useState } from "react";
+import React from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
 export default function FavoriteBooks() {
-  const [style, setStyle] = useState("hidden")
   const id_user = window.localStorage.getItem("id_user");
 
   const base_url = import.meta.env.VITE_API_ENDPOINT;

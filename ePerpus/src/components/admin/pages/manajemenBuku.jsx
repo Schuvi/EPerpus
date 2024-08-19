@@ -1,17 +1,21 @@
 import React, { useState } from "react";
 import axios from "axios";
-import { useQuery, useMutation } from "@tanstack/react-query";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useReactTable, getCoreRowModel, getPaginationRowModel, flexRender } from "@tanstack/react-table";
 import HapusBuku from "../komponen/hapusBuku";
 
 export default function ManajemenBuku() {
     const base_url = import.meta.env.VITE_API_ENDPOINT;
 
+    const query = useQueryClient();
+
     const [pageIndex, setPageIndex] = useState(0);
     const [pageSize, setPageSize] = useState(10);
     const [searchQuery, setSearchQuery] = useState("");
     const [createBooks, setCreateBooks] = useState("hidden");
+    const [editBooks, setEditBooks] = useState("hidden");
     const [tampil, setTampil] = useState(true);
+    const [tampilEdit, setTampilEdit] = useState(true);
 
     const getBuku = async ({ pageIndex, pageSize }) => {
         const response = await axios.get(base_url + "/get/books", {
@@ -68,7 +72,7 @@ export default function ManajemenBuku() {
         pengarang_buku: "",
         penerbit_buku: "",
         tahun_buku: 0,
-        status_buku: 0,
+        status_buku: 1,
         deskripsi_buku: "",
         kategori_buku: 0,
         genre: [],
@@ -89,6 +93,8 @@ export default function ManajemenBuku() {
         },
         onSuccess: (data) => {
             alert("Berhasil Menambahkan Buku")
+
+            query.invalidateQueries({ queryKey: ["getBooks"] });
         },
         onError: (error) => {
             alert(error)
@@ -107,6 +113,8 @@ export default function ManajemenBuku() {
         },
         onSuccess: (data) => {
             alert("Berhasil Mengedit Buku")
+
+            query.invalidateQueries({ queryKey: ["getBooks"] });
         },
         onError: (error) => {
             alert(error)
@@ -136,6 +144,7 @@ export default function ManajemenBuku() {
         e.preventDefault()
 
         const formData = new FormData()
+        formData.append("id_buku", create.id_buku)
         formData.append("judul_buku", create.judul_buku)
         formData.append("pengarang_buku", create.pengarang_buku)
         formData.append("penerbit_buku", create.penerbit_buku)
@@ -187,6 +196,16 @@ export default function ManajemenBuku() {
     const hiddenCreateBuku = () => {
         setTampil(false)
         setCreateBooks("hidden")
+    }
+    
+    const tampilEditBuku = () => {
+        setTampilEdit(true)
+        setEditBooks("block")
+    }
+
+    const hiddenEditBuku = () => {
+        setTampilEdit(false)
+        setEditBooks("hidden")
     }
 
     if (isLoading) return <div>Loading...</div>;
@@ -279,7 +298,7 @@ export default function ManajemenBuku() {
             </section>
 
             <section className={`p-3 overflow-hidden`}>
-                <h1>Tambah Buku</h1>
+                <h1 className="font-bold text-xl">Tambah Buku</h1>
                 <button type="button" className="border p-2 rounded-lg bg-pallet1 text-white" onClick={tampilCreateBuku}>
                     Buat Buku
                 </button>
@@ -373,8 +392,103 @@ export default function ManajemenBuku() {
                 </div>
             </section>
 
-            <section>
+            <section className={`p-3 overflow-hidden`}>
+                <h1 className="font-bold text-xl">Edit Buku</h1>
+                <button type="button" className="border p-2 rounded-lg bg-pallet1 text-white" onClick={tampilEditBuku}>
+                    Edit Buku
+                </button>
+                
+                <div className={`${editBooks} justify-center`}>
+                    <form className="flex flex-col rounded-lg bg-white w-[97vw] h-full p-3 items-center justify-center" onSubmit={handleEdit}>
+                        <div className="container flex flex-row justify-evenly">
+                            <div className="container w-1/3 flex flex-col">
+                                <label htmlFor="id_buku">ID Buku</label>
+                                <input className="rounded-xl" type="number" name="id_buku" id="id_buku" placeholder="Masukkan ID Buku" value={create.id_buku} onChange={handleChange}/>
 
+                                <label htmlFor="judul_buku">Judul Buku</label>
+                                <input className="rounded-xl" type="text" name="judul_buku" id="judul_buku" placeholder="Masukkan Judul Buku" value={create.judul_buku} onChange={handleChange}/>
+
+                                <label className="mt-3" htmlFor="pengarang_buku">Pengarang Buku</label>
+                                <input className="rounded-xl" type="text" name="pengarang_buku" id="pengarang_buku" placeholder="Masukkan Pengarang Buku" value={create.pengarang_buku} onChange={handleChange}/>
+
+                                <label className="mt-3" htmlFor="penerbit_buku">Penerbit Buku</label>
+                                <input className="rounded-xl" type="text" name="penerbit_buku" id="penerbit_buku" placeholder="Masukkan Penerbit Buku" value={create.penerbit_buku} onChange={handleChange}/>
+
+                                <label className="mt-3" htmlFor="tahun_buku">Tahun Terbit Buku</label>
+                                <input className="rounded-xl" type="number" name="tahun_buku" id="tahun_buku" placeholder="Masukkan Tahun Buku" value={create.tahun_buku} onChange={handleChange}/>
+
+                                <label htmlFor="status_buku">Status Buku</label>
+                                <input className="rounded-xl" type="number" name="status_buku" id="status_buku" value={create.status_buku} onChange={handleChange} disabled/>
+                                
+                                <label className="mt-3" htmlFor="deskripsi_buku">Deskripsi Buku</label>
+                                <textarea className="rounded-xl" name="deskripsi_buku" id="deskripsi_buku" placeholder="Masukkan Deskripsi Buku" value={create.deskripsi_buku} onChange={handleChange}></textarea>
+                            </div>
+
+                            <div className="container w-1/3 flex flex-col">
+                                <label className="mt-3" htmlFor="kategori_buku">Kategori Buku</label>
+                                <select className="rounded-xl" name="kategori_buku" id="kategori_buku" value={create.kategori_buku} onChange={handleChange}>
+                                    <option value="">Pilih Kategori Buku</option>
+                                    <option value="1">Novel</option>
+                                    <option value="2">Cerita Bergambar</option>
+                                    <option value="3">Komik</option>
+                                    <option value="4">Ensiklopedia</option>
+                                    <option value="5">Antologi</option>
+                                    <option value="6">Biografi</option>
+                                    <option value="7">Karya Ilmiah</option>
+                                    <option value="8">Kamus</option>
+                                    <option value="9">Majalah</option>
+                                    <option value="10">Biografi</option>
+                                </select>
+                                
+                                <label className="mt-3" htmlFor="genre">Genre</label>
+
+                                <div className="container flex flex-col flex-wrap">
+                                    <div className="container flex justify-evenly">
+                                        <input type="checkbox" name="genre" id="romance" value={1} onChange={handleGenreChange}/>
+                                        <label htmlFor="romance" className="-mt-1">Romance</label>
+                                        <input type="checkbox" name="genre" id="scifi" value={2} onChange={handleGenreChange}/>
+                                        <label htmlFor="scifi" className="-mt-1">Science Fiction</label>
+                                        <input type="checkbox" name="genre" id="fantasi" value={3} onChange={handleGenreChange}/>
+                                        <label htmlFor="fantasi" className="-mt-1">Fantasi</label>
+                                        <input type="checkbox" name="genre" id="misteri" value={4} onChange={handleGenreChange}/>
+                                        <label htmlFor="misteri" className="-mt-1">Misteri</label>
+                                        <input type="checkbox" name="genre" id="thriller" value={5} onChange={handleGenreChange}/>
+                                        <label htmlFor="thriller" className="-mt-1">Thriller</label>
+                                    </div>
+
+                                    <div className="container flex justify-evenly mt-5">
+                                        <input type="checkbox" name="genre" id="histori" value={6} onChange={handleGenreChange}/>
+                                        <label htmlFor="histori" className="-mt-1">Historical</label>
+                                        <input type="checkbox" name="genre" id="horror" value={7} onChange={handleGenreChange}/>
+                                        <label htmlFor="horror" className="-mt-1">Horror</label>
+                                        <input type="checkbox" name="genre" id="sol" value={8} onChange={handleGenreChange}/>
+                                        <label htmlFor="sol" className="-mt-1">Slice of Life</label>
+                                        <input type="checkbox" name="genre" id="motivasi" value={9} onChange={handleGenreChange}/>
+                                        <label htmlFor="motivasi" className="-mt-1">Motivasi</label>
+                                        <input type="checkbox" name="genre" id="jurnalisme" value={10} onChange={handleGenreChange}/>
+                                        <label htmlFor="jurnalisme" className="-mt-1">Jurnalisme</label>
+                                    </div>
+                                </div>
+
+                                <label htmlFor="gambar_buku" className="mt-3">Gambar Buku</label>
+                                <input type="file" name="gambar_buku" id="gambar_buku" className="border rounded-xl" onChange={handleChange} required/>
+                                
+                                <label className="mt-3" htmlFor="file_buku">URL Baca Buku Online</label>
+                                <input className="rounded-xl" type="text" name="file_buku" id="file_buku" placeholder="Masukkan URL Online Pub5HTML" value={create.file_buku} onChange={handleChange}/>
+
+                                <input type="text" name="banyak_pinjaman" id="banyak_pinjaman" value={create.banyak_pinjaman} hidden/>
+                            </div>
+                        </div>
+
+
+                        <div className="container flex flex-col mt-5 justify-center items-center">
+                            <button type="submit" className="border rounded-lg p-2 w-1/4 bg-pallet1 text-white">Tambah Buku</button>
+                            <button type="button" className="border rounded-lg p-2 w-1/4 bg-pallet1 mt-2 text-white" onClick={hiddenEditBuku}>
+                                Tutup Menu
+                            </button>
+                        </div>
+                    </form>
+                </div>
             </section>
         </>
     );
