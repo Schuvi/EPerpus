@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import axios from "axios";
 import { useQuery } from "@tanstack/react-query";
 import {
@@ -15,13 +15,15 @@ export default function TablePopularBooks() {
         return response.data;
     };
 
-    const { data, isLoading, error } = useQuery({
+    const { data: popularBooks, isLoading, error } = useQuery({
         queryKey: ["popularBooks"],
         queryFn: fetch,
-        refetchInterval: 5000,
+        refetchInterval: false
     });
 
-    const booksData = data ? data.data : [];
+    const booksData = React.useMemo(() => {
+        return popularBooks ? popularBooks.data : [];
+    }, [popularBooks]);
 
     const table = useReactTable({
         data: booksData.slice(0, 5),

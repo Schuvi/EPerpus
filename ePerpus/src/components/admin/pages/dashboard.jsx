@@ -7,7 +7,6 @@ import {
     getPaginationRowModel,
     flexRender
 } from "@tanstack/react-table";
-import TablePopularBooks from "../komponen/tablePopularBooks";
 
 export default function Dashboard() {
     const base_url = import.meta.env.VITE_API_ENDPOINT;
@@ -21,18 +20,18 @@ export default function Dashboard() {
         return response.data;
     };
 
-    const { data } = useQuery({
+    const { data: allUser } = useQuery({
         queryKey: ["jumlahUser"],
         queryFn: jumlahUser,
-        refetchInterval: 5000,
+        refetchInterval: 15000,
     });
 
     const filteredData = React.useMemo(() => {
-        if (!data) return [];
+        if (!allUser) return [];
         return statusFilter === ""
-            ? data.data
-            : data.data.filter((user) => user.status_user === statusFilter);
-    }, [data, statusFilter]);
+            ? allUser.data
+            : allUser.data.filter((user) => user.status_user === statusFilter);
+    }, [allUser, statusFilter]);
 
     const table = useReactTable({
         data: filteredData,
@@ -160,13 +159,6 @@ export default function Dashboard() {
                         </li>
                     </ol>
                 </div>
-            </section>
-
-            <section className="mt-2 p-3">
-                <h1 className="text-start text-xl font-bold mb-2 before:content-['#'] before:mr-2">Data 5 Buku Terpopuler</h1>
-
-                <TablePopularBooks />
-
             </section>
         </>
     );

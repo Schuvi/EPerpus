@@ -25,6 +25,23 @@ export default function Login() {
             return response.data
         },
         onSuccess: (data) => {
+            const handleAdminLogin = () => {
+                const screenWidth = window.innerWidth;
+    
+                if (screenWidth < 1280) {
+                    alert("Dashboard Admin Hanya Dapat Dibuka Pada Desktop");
+                } else {
+                    window.localStorage.setItem("username", data.data.nama_lengkap)
+                    window.localStorage.setItem("token", data.data)
+                    window.localStorage.setItem("id_user", data.data.id_user)
+                    window.localStorage.setItem("profile", data.data.gambar_profil)
+                    window.localStorage.setItem("role", data.data.role)
+                    window.localStorage.setItem("isLoggedIn", true)
+
+                    navigate("/admin/dashboard");
+                }
+            };
+
             if (data.message === "Berhasil Login sebagai User") {
                 window.localStorage.setItem("username", data.data.nama_lengkap)
                 window.localStorage.setItem("token", data.data)
@@ -44,18 +61,12 @@ export default function Login() {
                 })
 
             } else if (data.message === "Berhasil Login sebagai Admin") {
-                window.localStorage.setItem("username", data.data.nama_lengkap)
-                window.localStorage.setItem("token", data.data)
-                window.localStorage.setItem("id_user", data.data.id_user)
-                window.localStorage.setItem("profile", data.data.gambar_profil)
-                window.localStorage.setItem("role", data.data.role)
-                window.localStorage.setItem("isLoggedIn", true)
                 
                 axios.put(base_url + `/stat/login?id_user=${data.data.id_user}`)
                 .then((res) => {
                     if (res.data.message === "Berhasil Login") {
                         alert(`Selamat Datang Admin ${data.data.nama_lengkap}`)
-                        navigate("/admin/dashboard")
+                        handleAdminLogin()
                     } else {
                         alert("Gagal Login")
                     }

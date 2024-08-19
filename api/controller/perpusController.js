@@ -8,15 +8,36 @@ const path = require('path');
 const perpusController = {
     getBooks: async (req, res) => {
         try {
-            const [rows, fields] = await pool.query("SELECT buku.id_buku, buku.judul_buku, buku.pengarang_buku, buku.penerbit_buku, buku.tahun_buku, buku_status.status, buku.gambar_buku, buku.file_buku, buku.deskripsi_buku FROM buku JOIN buku_status ON buku.status_buku = buku_status.id_status")
+            const page = parseInt(req.query.page) || 1; // Halaman saat ini, default ke 1 jika tidak disediakan
+            const pageSize = parseInt(req.query.pageSize) || 10; // Jumlah item per halaman, default ke 10
+            const offset = (page - 1) * pageSize; // Menghitung offset
+    
+            // Query untuk mendapatkan data buku dengan limit dan offset
+            const [rows] = await pool.query(`
+                SELECT buku.id_buku, buku.judul_buku, buku.pengarang_buku, buku.penerbit_buku, buku.tahun_buku, buku_status.status, buku.gambar_buku, buku.file_buku, buku.deskripsi_buku
+                FROM buku 
+                JOIN buku_status ON buku.status_buku = buku_status.id_status
+                LIMIT ? OFFSET ?
+            `, [pageSize, offset]);
+    
+            // Query untuk mendapatkan jumlah total buku (tanpa pagination)
+            const [countResult] = await pool.query(`
+                SELECT COUNT(*) as total FROM buku
+            `);
+            const total = countResult[0].total;
+    
             res.json({
-                data: rows
-            })
-
+                data: rows,
+                total, // Total jumlah buku
+                page,  // Halaman saat ini
+                pageSize, // Jumlah item per halaman
+            });
+    
         } catch (error) {
-            console.error(error)
+            console.error(error);
             res.json({
-                state: "error"
+                state: "error",
+                message: error.message
             });
         }
     },
@@ -303,7 +324,7 @@ const perpusController = {
         }
     },
 
-    createBooks : async (req, res) => {
+    createBooks: async (req, res) => {
         const connection = await pool.getConnection();
         try {
             upload(req, res, async (err) => {
@@ -313,22 +334,37 @@ const perpusController = {
     
                 const { judul_buku, pengarang_buku, penerbit_buku, tahun_buku, status_buku, deskripsi_buku, kategori_buku, genre, file_buku, banyak_pinjaman } = req.body;
     
-                const gambar_buku = req.files['gambar_buku'] ? `/buku/${req.files['gambar_buku'][0].filename}` : null;
+                // Ensure genre is an array
+                const genreArray = Array.isArray(genre) ? genre : genre.split(',').map(Number); // Convert to array if necessary and ensure each element is a number
     
+                // Handle file upload for gambar_buku
+                const gambar_buku = req.files && req.files['gambar_buku'] 
+                    ? `/buku/${req.files['gambar_buku'][0].filename}` 
+                    : null;
+    
+                // Begin transaction
                 await connection.beginTransaction();
     
-                const sql = "INSERT INTO buku (judul_buku, pengarang_buku, penerbit_buku, tahun_buku, status_buku, gambar_buku, deskripsi_buku, file_buku, banyak_pinjaman) VALUES (?, ?, ?, ?, ?, ?, ?, ?, 0);";
-    
-                const [resultBuku] = await connection.query(sql, [judul_buku, pengarang_buku, penerbit_buku, tahun_buku, status_buku, gambar_buku, deskripsi_buku,file_buku, banyak_pinjaman]);
+                // Insert into buku table
+                const sql = `INSERT INTO buku 
+                    (judul_buku, pengarang_buku, penerbit_buku, tahun_buku, status_buku, gambar_buku, deskripsi_buku, file_buku, banyak_pinjaman) 
+                    VALUES (?, ?, ?, ?, 1, ?, ?, ?, 0);`;
+                const [resultBuku] = await connection.query(sql, 
+                    [judul_buku, pengarang_buku, penerbit_buku, tahun_buku, gambar_buku, deskripsi_buku, file_buku]);
     
                 const bukuId = resultBuku.insertId;
     
+                // Insert into kategori table
                 const sqlKategori = "INSERT INTO kategori (id_buku, kategori_buku) VALUES (?, ?);";
-                const sqlGenre = "INSERT INTO genre (id_buku, genre) VALUES (?, ?);";
-    
                 await connection.query(sqlKategori, [bukuId, kategori_buku]);
-                await connection.query(sqlGenre, [bukuId, genre]);
     
+                // Insert into genre table
+                const sqlGenre = "INSERT INTO genre (id_buku, genre) VALUES (?, ?);";
+                for (let g of genreArray) {
+                    await connection.query(sqlGenre, [bukuId, g]);
+                }
+    
+                // Commit transaction
                 await connection.commit();
     
                 res.status(201).json({
@@ -357,8 +393,7 @@ const perpusController = {
                     return res.status(500).json({ state: 'error', error: err.message });
                 }
     
-                const { judul_buku, pengarang_buku, penerbit_buku, tahun_buku, status_buku, deskripsi_buku, kategori_buku, genre, file_buku, banyak_pinjaman } = req.body;
-                const { id_buku } = req.query;
+                const { id_buku, judul_buku, pengarang_buku, penerbit_buku, tahun_buku, status_buku, deskripsi_buku, kategori_buku, genre, file_buku, banyak_pinjaman } = req.body;
     
                 await connection.beginTransaction();
     

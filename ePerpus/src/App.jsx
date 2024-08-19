@@ -16,6 +16,8 @@ import Employee from "./components/pages/pustakawan";
 import Profile from "./components/pages/profile";
 import EditProfile from "./components/pages/editProfile";
 import Dashboard from "./components/admin/pages/dashboard";
+import MenuBuku from "./components/admin/pages/menuBuku";
+import ManajemenBuku from "./components/admin/pages/manajemenBuku";
 import ProtectedRoute from "./components/auth/ProtectedRoute";
 import RedirectLoggedIn from "./components/auth/redirectLogged";
 import { Route, Routes, Navigate } from "react-router-dom";
@@ -41,9 +43,8 @@ export default function App() {
             <Navbar />
             <div className="wrapper-content font-firaSans">
               <Routes>
-                <Route element={<ProtectedRoute />}>
-                  
-                  {isLoggedIn && role == "user" ? (
+              <Route element={<ProtectedRoute />}>
+                  {isLoggedIn && role === "user" && (
                     <>
                       <Route path="/search" element={<Search />}/>
                       <Route path="/detail/id/:id_buku" element={<DetailBooks />}/>
@@ -56,12 +57,14 @@ export default function App() {
                       <Route path="/profile/edit" element={<EditProfile />}/>
                       <Route path="/admin/dashboard" element={<Navigate to="/" />}/>
                     </>
-                  ) : (
+                  )}
+                  {isLoggedIn && role === "admin" && (
                     <>
                       <Route path="/admin/dashboard" element={<Dashboard />}/>
+                      <Route path="/admin/buku" element={<MenuBuku />}/>
+                      <Route path="/admin/buku/manajemen" element={<ManajemenBuku />}/>
                     </>
                   )}
-
                 </Route>
 
                 <Route element={<RedirectLoggedIn/>}>
