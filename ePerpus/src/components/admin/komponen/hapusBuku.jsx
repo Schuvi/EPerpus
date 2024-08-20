@@ -15,7 +15,7 @@ export default function HapusBuku() {
             return response.data
         },
         onSuccess: (data) => {
-            alert("Berhasil Menghapus Buku")
+            alert("Berhasil Menghapus Buku, refresh untuk melihat hasilnya")
         },
         onError: (error) => {
             alert("Gagal Menghapus Buku")

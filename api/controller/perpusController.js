@@ -10,14 +10,11 @@ const perpusController = {
         try {
             const page = parseInt(req.query.page) || 1; // Halaman saat ini, default ke 1 jika tidak disediakan
             const pageSize = parseInt(req.query.pageSize) || 10; // Jumlah item per halaman, default ke 10
-            const offset = (page - 1) * pageSize; // Menghitung offset
+            const offset = (page - 1) * pageSize; // Menghitung offset (halaman untuk query)
     
             // Query untuk mendapatkan data buku dengan limit dan offset
             const [rows] = await pool.query(`
-                SELECT buku.id_buku, buku.judul_buku, buku.pengarang_buku, buku.penerbit_buku, buku.tahun_buku, buku_status.status, buku.gambar_buku, buku.file_buku, buku.deskripsi_buku
-                FROM buku 
-                JOIN buku_status ON buku.status_buku = buku_status.id_status
-                LIMIT ? OFFSET ?
+                SELECT buku.id_buku, buku.judul_buku, buku.pengarang_buku, buku.penerbit_buku, buku.tahun_buku, buku_status.status, buku.gambar_buku, buku.file_buku, buku.deskripsi_buku FROM buku JOIN buku_status ON buku.status_buku = buku_status.id_status ORDER BY buku.id_buku ASC LIMIT ? OFFSET ?
             `, [pageSize, offset]);
     
             // Query untuk mendapatkan jumlah total buku (tanpa pagination)
@@ -160,26 +157,56 @@ const perpusController = {
     },
 
     getBooksBorrowed: async (req, res) => {
-        const connection = await pool.getConnection()
+        const connection = await pool.getConnection();
         try {
-            await connection.beginTransaction()
-
-            const sql = `SELECT id_pinjaman, buku.judul_buku, DATE_FORMAT(tanggal_meminjam, '%Y-%m-%d') AS tanggal_meminjam, DATE_FORMAT(tanggal_mengembalikan, '%Y-%m-%d') AS tanggal_mengembalikan, user_data.nama_lengkap FROM buku_pinjaman JOIN buku ON buku_pinjaman.id_buku = buku.id_buku JOIN user_data ON buku_pinjaman.user_peminjam = user_data.id_user`
-
-            const [result] = await connection.query(sql)
-
-            await connection.commit()
-
+            await connection.beginTransaction();
+    
+            // Get page and limit from query parameters, set defaults if not provided
+            const page = parseInt(req.query.page) || 1;
+            const pageSize = parseInt(req.query.pageSize) || 10;
+            const offset = (page - 1) * pageSize;
+    
+            const sql = `
+                SELECT 
+                    id_pinjaman, 
+                    buku.judul_buku, 
+                    DATE_FORMAT(tanggal_meminjam, '%Y-%m-%d') AS tanggal_meminjam, 
+                    DATE_FORMAT(tanggal_mengembalikan, '%Y-%m-%d') AS tanggal_mengembalikan, 
+                    user_data.nama_lengkap 
+                FROM 
+                    buku_pinjaman 
+                JOIN 
+                    buku ON buku_pinjaman.id_buku = buku.id_buku 
+                JOIN 
+                    user_data ON buku_pinjaman.user_peminjam = user_data.id_user
+                LIMIT ? OFFSET ?`;
+    
+            const countSql = `SELECT COUNT(*) AS total FROM buku_pinjaman`;
+    
+            // Get total count for pagination
+            const [[totalResult]] = await connection.query(countSql);
+            const total = totalResult.total;
+    
+            const [result] = await connection.query(sql, [pageSize, offset]);
+    
+            await connection.commit();
+    
             res.json({
                 message: "Berhasil mengambil data buku yang dipinjam",
-                data: result
-            })
+                data: result,
+                pagination: {
+                    total,
+                    page,
+                    pageSize,
+                    totalPages: Math.ceil(total / pageSize),
+                },
+            });
         } catch (error) {
-            console.error(error)
+            console.error(error);
             res.json({
                 state: "error",
-                message: "Gagal mengambil data buku yang dipinjam"
-            })
+                message: "Gagal mengambil data buku yang dipinjam",
+            });
         } finally {
             connection.release();
         }
