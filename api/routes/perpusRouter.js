@@ -4,6 +4,7 @@ const router = express.Router()
 const perpusController = require("../controller/perpusController")
 
 router.get("/get/books", perpusController.getBooks)
+router.get("/get/books/all", perpusController.getAllBooks)
 router.get("/get/books/categories", perpusController.getBooksByCategories)
 router.get("/get/books/genre", perpusController.getBooksByGenre)
 router.get("/search/books", perpusController.searchBooks)

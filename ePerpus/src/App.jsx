@@ -21,6 +21,7 @@ import ManajemenBuku from "./components/admin/pages/manajemenBuku";
 import TransactionPage from "./components/admin/pages/transactionPage";
 import DaftarBukuDipinjam from "./components/admin/pages/daftarBukuDipinjam";
 import PinjamBukuAdmin from "./components/admin/pages/adminPinjamBuku";
+import KembalikanBukuAdmin from "./components/admin/pages/adminKembaliBuku";
 import ProtectedRoute from "./components/auth/ProtectedRoute";
 import RedirectLoggedIn from "./components/auth/redirectLogged";
 import { Route, Routes, Navigate } from "react-router-dom";
@@ -69,6 +70,7 @@ export default function App() {
                       <Route path="/admin/buku/transaksi" element={<TransactionPage/>}/>
                       <Route path="/admin/buku/dipinjam" element={<DaftarBukuDipinjam/>}/>
                       <Route path="/admin/buku/pinjam" element={<PinjamBukuAdmin/>}/>
+                      <Route path="/admin/buku/kembali" element={<KembalikanBukuAdmin/>}/>
                     </>
                   )}
                 </Route>

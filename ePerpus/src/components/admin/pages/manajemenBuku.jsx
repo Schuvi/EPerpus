@@ -1,13 +1,26 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import axios from "axios";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useReactTable, getCoreRowModel, getPaginationRowModel, flexRender } from "@tanstack/react-table";
 import HapusBuku from "../komponen/hapusBuku";
+import Barcode from "react-barcode";
+import * as htmlToImage from "html-to-image";
 
 export default function ManajemenBuku() {
     const base_url = import.meta.env.VITE_API_ENDPOINT;
 
     const query = useQueryClient();
+
+    const barcodeRef = useRef(null);
+
+    const handleSaveBarcode = async () => {
+        const dataUrl = await htmlToImage.toPng(barcodeRef.current);
+        
+        const link = document.createElement('a');
+        link.href = dataUrl;
+        link.download = 'barcode.png';
+        link.click();
+    };
 
     const [pageIndex, setPageIndex] = useState(0);
     const [pageSize, setPageSize] = useState(10);
@@ -376,6 +389,16 @@ export default function ManajemenBuku() {
                                 
                                 <label className="mt-3" htmlFor="file_buku">URL Baca Buku Online</label>
                                 <input className="rounded-xl" type="text" name="file_buku" id="file_buku" placeholder="Masukkan URL Online Pub5HTML" value={create.file_buku} onChange={handleChange}/>
+
+                                <div className="mt-3">
+                                    <label htmlFor="barcode" >Barcode Generator</label>
+                                    <div ref={barcodeRef}>
+                                        <Barcode value={create.judul_buku === "" ? "Isi Judul Buku" : create.judul_buku}/>
+                                    </div>
+                                    <button type="button" className="border p-2 rounded-lg bg-pallet1 text-white" onClick={handleSaveBarcode}>
+                                        Simpan Barcode
+                                    </button>
+                                </div>
 
                                 <input type="text" name="banyak_pinjaman" id="banyak_pinjaman" value={create.banyak_pinjaman} hidden/>
                             </div>

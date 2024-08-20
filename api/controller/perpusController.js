@@ -39,6 +39,32 @@ const perpusController = {
         }
     },
 
+    getAllBooks: async (req, res) => {
+        const connection = await pool.getConnection()
+        try {
+            await connection.beginTransaction()
+
+            const [result] = await connection.query("SELECT buku.id_buku, buku.judul_buku, buku.pengarang_buku, buku.penerbit_buku, buku.tahun_buku, buku_status.status, buku.gambar_buku, buku.file_buku, buku.deskripsi_buku FROM buku JOIN buku_status ON buku.status_buku = buku_status.id_status ORDER BY buku.id_buku");
+
+            await connection.commit()
+
+            res.json({
+                data: result
+            })
+
+        } catch (error) {
+            console.error(error)
+            await connection.rollback()
+
+            res.status(500).json({
+                state: "error",
+                message: "Gagal Mengambil Data Buku"
+            })
+        } finally {
+            connection.release()
+        }
+    },
+
     getBooksById: async (req, res) => {
         const connection = await pool.getConnection()
         try {
@@ -627,8 +653,10 @@ const perpusController = {
                 const sqlCheckBook = `SELECT status_buku FROM buku WHERE id_buku = ? FOR UPDATE`;
                 const [bookStatus] = await connection.query(sqlCheckBook, [id_buku]);
     
-                if (bookStatus[0].status_buku !== 1) { // Assuming 1 is available, 2 is borrowed
+                if (bookStatus[0].status_buku === 2) { // Assuming 1 is available, 2 is borrowed
                     throw new Error(`Buku ini telah dipinjam`);
+                } else if (bookStatus[0].status_buku === 3) {
+                    throw new Error(`Buku ini rusak tidak dapat dipinjam`);
                 }
     
                 await connection.query(sqlDetailTransaksi, [id_referensi, id_buku]);

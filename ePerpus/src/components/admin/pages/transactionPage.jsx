@@ -18,7 +18,7 @@ export default function TransactionPage() {
                         <i className="fa-solid fa-bookmark text-[2.5em]"></i>
                         <h1 className="text-xl mt-2">Pinjam Buku</h1>
                     </div>
-                    <div className="container w-1/4 flex flex-col justify-center items-center border rounded-lg bg-pallet1 text-white h-[20vh] hover:shadow-lg hover:cursor-pointer hover:-translate-y-2 hover:transition-all">
+                    <div className="container w-1/4 flex flex-col justify-center items-center border rounded-lg bg-pallet1 text-white h-[20vh] hover:shadow-lg hover:cursor-pointer hover:-translate-y-2 hover:transition-all" onClick={() => navigate("/admin/buku/kembali")}>
                         <i className="fa-solid fa-hand-holding-hand text-[2.5em]"></i>
                         <h1 className="text-xl mt-2">Kembalikan Buku</h1>
                     </div>
