@@ -82,7 +82,7 @@ export default function Navbar() {
                             <div className="container w-full flex justify-evenly border-r-2 mr-2">
                                 <Link to="/admin/dashboard">Dashboard</Link>
                                 <Link to="/admin/buku">Menu Buku</Link>
-                                <Link to="/pustakawan">Menu User</Link>
+                                <Link to="/admin/akun">Menu User</Link>
                             </div>
                         </>
                     ) : (

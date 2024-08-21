@@ -194,7 +194,8 @@ const perpusController = {
     
             const sql = `
                 SELECT 
-                    id_pinjaman, 
+                    id_pinjaman,
+                    buku.id_buku,
                     buku.judul_buku, 
                     DATE_FORMAT(tanggal_meminjam, '%Y-%m-%d') AS tanggal_meminjam, 
                     DATE_FORMAT(tanggal_mengembalikan, '%Y-%m-%d') AS tanggal_mengembalikan, 
@@ -720,52 +721,113 @@ const perpusController = {
     },
 
     getUser: async (req, res) => {
-        const connection = await pool.getConnection()
+        const connection = await pool.getConnection();
         try {
-            await connection.beginTransaction()
-
-            const sql = "SELECT user_data.id_user, user_data.nama_lengkap, user_data.email, user_data.role, user_status.status_user FROM user_data JOIN user_status ON user_data.status = user_status.id WHERE user_data.role = 'user'"
-
-            const [result] = await connection.query(sql)
-
-            await connection.commit()
-
+            await connection.beginTransaction();
+    
+            // Ambil page dan pageSize dari query parameter, jika tidak ada, gunakan default
+            const page = parseInt(req.query.page) || 1;
+            const pageSize = parseInt(req.query.pageSize) || 10;
+            const offset = (page - 1) * pageSize;
+    
+            const sql = `
+                SELECT 
+                    user_data.id_user, 
+                    user_data.nama_lengkap, 
+                    user_data.email, 
+                    user_data.role, 
+                    user_status.status_user 
+                FROM 
+                    user_data 
+                JOIN 
+                    user_status ON user_data.status = user_status.id 
+                WHERE 
+                    user_data.role = 'user'
+                LIMIT ? OFFSET ?`;
+    
+            const countSql = `SELECT COUNT(*) AS total FROM user_data WHERE role = 'user'`;
+    
+            // Mendapatkan total jumlah data untuk pagination
+            const [[totalResult]] = await connection.query(countSql);
+            const total = totalResult.total;
+    
+            const [result] = await connection.query(sql, [pageSize, offset]);
+    
+            await connection.commit();
+    
             res.json({
                 state: "Berhasil Mengambil Data User",
-                data: result
-            })
+                data: result,
+                pagination: {
+                    total,
+                    page,
+                    pageSize,
+                    totalPages: Math.ceil(total / pageSize),
+                },
+            });
         } catch (error) {
-            console.error(error)
+            console.error(error);
             res.status(500).json({
                 state: "error",
-                message: "Gagal Mengambil Data User"
-            })
+                message: "Gagal Mengambil Data User",
+            });
         } finally {
             connection.release();
         }
     },
 
     getAdmin: async (req, res) => {
-        const connection = await pool.getConnection()
+        const connection = await pool.getConnection();
         try {
-            await connection.beginTransaction()
-
-            const sql = "SELECT user_data.id_user, user_data.nama_lengkap, user_data.email, user_data.role, user_data.gambar_profil, user_status.status_user FROM user_data JOIN user_status ON user_data.status = user_status.id WHERE user_data.role = 'admin'"
-
-            const [result] = await connection.query(sql)
-
-            await connection.commit()
-
+            await connection.beginTransaction();
+    
+            // Ambil page dan pageSize dari query parameter, jika tidak ada, gunakan default
+            const page = parseInt(req.query.page) || 1;
+            const pageSize = parseInt(req.query.pageSize) || 10;
+            const offset = (page - 1) * pageSize;
+    
+            const sql = `
+                SELECT 
+                    user_data.id_user, 
+                    user_data.nama_lengkap, 
+                    user_data.email, 
+                    user_data.role, 
+                    user_data.gambar_profil, 
+                    user_status.status_user 
+                FROM 
+                    user_data 
+                JOIN 
+                    user_status ON user_data.status = user_status.id 
+                WHERE 
+                    user_data.role = 'admin'
+                LIMIT ? OFFSET ?`;
+    
+            const countSql = `SELECT COUNT(*) AS total FROM user_data WHERE role = 'admin'`;
+    
+            // Mendapatkan total jumlah data untuk pagination
+            const [[totalResult]] = await connection.query(countSql);
+            const total = totalResult.total;
+    
+            const [result] = await connection.query(sql, [pageSize, offset]);
+    
+            await connection.commit();
+    
             res.json({
-                state: "Berhasil Mengambil Data User",
-                data: result
-            })
+                state: "Berhasil Mengambil Data Admin",
+                data: result,
+                pagination: {
+                    total,
+                    page,
+                    pageSize,
+                    totalPages: Math.ceil(total / pageSize),
+                },
+            });
         } catch (error) {
-            console.error(error)
+            console.error(error);
             res.status(500).json({
                 state: "error",
-                message: "Gagal Mengambil Data User"
-            })
+                message: "Gagal Mengambil Data Admin",
+            });
         } finally {
             connection.release();
         }

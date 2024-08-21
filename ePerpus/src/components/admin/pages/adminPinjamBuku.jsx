@@ -23,7 +23,6 @@ export default function PinjamBukuAdmin() {
         id_buku: [{ id: "", judul: "" }],
     });
 
-    const [durasi, setDurasi] = useState("");
     const date = new Date();
     const year = date.getFullYear();
     const month = String(date.getMonth() + 1).padStart(2, "0");
