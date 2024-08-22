@@ -68,7 +68,7 @@ export default function TableAdmin() {
     return(
         <>
             <div className="mb-4">
-                <input type="text" placeholder="Cari Buku..." value={search} onChange={(e) => setSearch(e.target.value)} className="p-2 border rounded-lg w-full" />
+                <input type="text" placeholder="Cari Admin..." value={search} onChange={(e) => setSearch(e.target.value)} className="p-2 border rounded-lg w-full" />
             </div>
 
             <table className="w-full mx-auto">

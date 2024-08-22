@@ -9,35 +9,64 @@ const perpusController = {
     getBooks: async (req, res) => {
         try {
             const page = parseInt(req.query.page) || 1; // Halaman saat ini, default ke 1 jika tidak disediakan
-            const pageSize = parseInt(req.query.pageSize) || 10; // Jumlah item per halaman, default ke 10
+            const pageSize = parseInt(req.query.pageSize); // Jumlah item per halaman, dapat tidak disediakan
             const offset = (page - 1) * pageSize; // Menghitung offset (halaman untuk query)
     
-            // Query untuk mendapatkan data buku dengan limit dan offset
-            const [rows] = await pool.query(`
-                SELECT buku.id_buku, buku.judul_buku, buku.pengarang_buku, buku.penerbit_buku, buku.tahun_buku, buku_status.status, buku.gambar_buku, buku.file_buku, buku.deskripsi_buku FROM buku JOIN buku_status ON buku.status_buku = buku_status.id_status ORDER BY buku.id_buku ASC LIMIT ? OFFSET ?
-            `, [pageSize, offset]);
+            // Query dasar untuk mendapatkan data buku
+            let sql = `
+                SELECT 
+                    buku.id_buku, 
+                    buku.judul_buku, 
+                    buku.pengarang_buku, 
+                    buku.penerbit_buku, 
+                    buku.tahun_buku, 
+                    buku_status.status, 
+                    buku.gambar_buku, 
+                    buku.file_buku, 
+                    buku.deskripsi_buku 
+                FROM 
+                    buku 
+                JOIN 
+                    buku_status ON buku.status_buku = buku_status.id_status 
+                ORDER BY 
+                    buku.id_buku ASC
+            `;
+    
+            // Tambahkan LIMIT dan OFFSET jika pageSize diberikan dan lebih besar dari 0
+            if (pageSize > 0) {
+                sql += ` LIMIT ? OFFSET ?`;
+            }
     
             // Query untuk mendapatkan jumlah total buku (tanpa pagination)
-            const [countResult] = await pool.query(`
-                SELECT COUNT(*) as total FROM buku
-            `);
+            const countSql = `SELECT COUNT(*) as total FROM buku`;
+    
+            // Mendapatkan total jumlah data untuk pagination
+            const [countResult] = await pool.query(countSql);
             const total = countResult[0].total;
+    
+            // Jalankan query dengan atau tanpa LIMIT dan OFFSET
+            const [rows] = pageSize > 0 
+                ? await pool.query(sql, [pageSize, offset]) 
+                : await pool.query(sql);
     
             res.json({
                 data: rows,
-                total, // Total jumlah buku
-                page,  // Halaman saat ini
-                pageSize, // Jumlah item per halaman
+                total,  // Total jumlah buku
+                pagination: pageSize > 0 ? {
+                    page,  // Halaman saat ini
+                    pageSize,  // Jumlah item per halaman
+                    totalPages: Math.ceil(total / pageSize), // Total halaman
+                } : null,  // Jika tidak ada pagination, kirim null
             });
     
         } catch (error) {
             console.error(error);
-            res.json({
+            res.status(500).json({
                 state: "error",
                 message: error.message
             });
         }
-    },
+    },    
 
     getAllBooks: async (req, res) => {
         const connection = await pool.getConnection()
@@ -654,7 +683,7 @@ const perpusController = {
                 const sqlCheckBook = `SELECT status_buku FROM buku WHERE id_buku = ? FOR UPDATE`;
                 const [bookStatus] = await connection.query(sqlCheckBook, [id_buku]);
     
-                if (bookStatus[0].status_buku === 2) { // Assuming 1 is available, 2 is borrowed
+                if (bookStatus[0].status_buku === 2) {
                     throw new Error(`Buku ini telah dipinjam`);
                 } else if (bookStatus[0].status_buku === 3) {
                     throw new Error(`Buku ini rusak tidak dapat dipinjam`);
@@ -727,10 +756,10 @@ const perpusController = {
     
             // Ambil page dan pageSize dari query parameter, jika tidak ada, gunakan default
             const page = parseInt(req.query.page) || 1;
-            const pageSize = parseInt(req.query.pageSize) || 10;
+            const pageSize = parseInt(req.query.pageSize);
             const offset = (page - 1) * pageSize;
     
-            const sql = `
+            let sql = `
                 SELECT 
                     user_data.id_user, 
                     user_data.nama_lengkap, 
@@ -742,8 +771,12 @@ const perpusController = {
                 JOIN 
                     user_status ON user_data.status = user_status.id 
                 WHERE 
-                    user_data.role = 'user'
-                LIMIT ? OFFSET ?`;
+                    user_data.role = 'user'`;
+    
+            // Tambahkan LIMIT dan OFFSET hanya jika pageSize diberikan dan lebih besar dari 0
+            if (pageSize > 0) {
+                sql += ` LIMIT ? OFFSET ?`;
+            }
     
             const countSql = `SELECT COUNT(*) AS total FROM user_data WHERE role = 'user'`;
     
@@ -751,19 +784,22 @@ const perpusController = {
             const [[totalResult]] = await connection.query(countSql);
             const total = totalResult.total;
     
-            const [result] = await connection.query(sql, [pageSize, offset]);
+            // Jalankan query dengan atau tanpa LIMIT dan OFFSET
+            const [result] = pageSize > 0 
+                ? await connection.query(sql, [pageSize, offset]) 
+                : await connection.query(sql);
     
             await connection.commit();
     
             res.json({
                 state: "Berhasil Mengambil Data User",
                 data: result,
-                pagination: {
+                pagination: pageSize > 0 ? {
                     total,
                     page,
                     pageSize,
                     totalPages: Math.ceil(total / pageSize),
-                },
+                } : null,
             });
         } catch (error) {
             console.error(error);

@@ -64,6 +64,15 @@ export default function App() {
                     <Route path="/profile" element={<Profile />} />
                     <Route path="/profile/edit" element={<EditProfile />} />
                     <Route path="/admin/dashboard" element={<Navigate to="/" />} />
+                    <Route path="/admin/buku" element={<Navigate to="/" />} />
+                    <Route path="/admin/buku/manajemen" element={<Navigate to="/" />} />
+                    <Route path="/admin/buku/transaksi" element={<Navigate to="/" />} />
+                    <Route path="/admin/buku/dipinjam" element={<Navigate to="/" />} />
+                    <Route path="/admin/buku/pinjam" element={<Navigate to="/" />} />
+                    <Route path="/admin/buku/kembali" element={<Navigate to="/" />} />
+                    <Route path="/admin/akun" element={<Navigate to="/" />} />
+                    <Route path="/admin/akun/user" element={<Navigate to="/" />} />
+                    <Route path="/admin/akun/admin" element={<Navigate to="/" />} />
                   </>
                 )}
                 {isLoggedIn && role === "admin" && (
@@ -87,9 +96,9 @@ export default function App() {
                 <Route path="/register" element={<Register />} />
               </Route>
 
-              <Route path="*" element={<div>Halaman Tidak ada</div>} />
               <Route path="/" element={<Home />} />
               <Route path="/pustakawan" element={<Employee />} />
+              <Route path="*" element={<div>Halaman Tidak ada</div>} />
             </Routes>
           </div>
           <Footer />

@@ -123,7 +123,7 @@ export default function UserAccount() {
 
       <section className="p-3">
         <div className="mb-4">
-          <input type="text" placeholder="Cari Buku..." value={search} onChange={(e) => setSearch(e.target.value)} className="p-2 border rounded-lg w-full" />
+          <input type="text" placeholder="Cari User..." value={search} onChange={(e) => setSearch(e.target.value)} className="p-2 border rounded-lg w-full" />
         </div>
 
         <table className="w-full mx-auto">
@@ -206,7 +206,7 @@ export default function UserAccount() {
       </section>
 
       <section className="p-3">
-        <h1>Edit Status User</h1>
+        <h1 className="font-bold text-xl mb-3">Edit Status User</h1>
 
         <button type="button" className={`${button2 ? "bg-pallet1" : "bg-red-700"} text-white p-2 rounded-lg`} onClick={tampil3}>
           {tulisan3}

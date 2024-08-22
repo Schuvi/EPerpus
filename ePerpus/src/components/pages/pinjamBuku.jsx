@@ -68,7 +68,19 @@ export default function BorrowBooks() {
         formData.append("tanggal_pengembalian", tanggalPengembalian)
         formData.append("buku_ids", [buku.id_buku])
 
-        pinjam.mutate(formData)
+        axios.get(base_url + "/get/user")
+        .then((res) => {
+            const users = res.data.data
+            const statusUser = users.filter(item => item.id_user === user).find(status=> status.status_user)
+            
+            if (statusUser === "Diblokir") {
+                alert("Akun Anda Telah Diblokir")
+            } else {
+                pinjam.mutate(formData)
+            }
+        })
+
+
     }
 
     return (
