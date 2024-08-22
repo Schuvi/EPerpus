@@ -5,6 +5,7 @@ import React, { useState } from "react";
 import CreateUser from "../komponen/buatUser";
 import EditUser from "../komponen/adminEditUser";
 import HapusUser from "../komponen/hapusUser";
+import EditStatus from "../komponen/adminEditStatusUser";
 
 export default function UserAccount() {
   const base_url = import.meta.env.VITE_API_ENDPOINT;
@@ -14,10 +15,13 @@ export default function UserAccount() {
   const [search, setSearch] = useState("");
   const [button, setButton] = useState(true);
   const [button1, setButton1] = useState(true);
+  const [button2, setButton2] = useState(true);
   const [style, setStyle] = useState("hidden");
   const [style1, setStyle1] = useState("hidden");
+  const [style2, setStyle2] = useState("hidden");
   const [tulisan1, setTulisan1] = useState("Tambah User");
   const [tulisan2, setTulisan2] = useState("Edit User");
+  const [tulisan3, setTulisan3] = useState("Edit Status User");
 
   const tampil = () => {
     setButton(true);
@@ -42,6 +46,19 @@ export default function UserAccount() {
     } else if (button1 === false) {
       setStyle1("hidden");
       setTulisan2("Edit User");
+    }
+  };
+
+  const tampil3 = () => {
+    setButton2(true);
+
+    if (button2) {
+      setStyle2("flex");
+      setTulisan3("Tutup Menu");
+      setButton2(false);
+    } else if (button2 === false) {
+      setStyle2("hidden");
+      setTulisan3("Edit User");
     }
   };
 
@@ -186,6 +203,18 @@ export default function UserAccount() {
         <h1 className="font-bold text-xl mb-3">Hapus User</h1>
 
         <HapusUser />
+      </section>
+
+      <section className="p-3">
+        <h1>Edit Status User</h1>
+
+        <button type="button" className={`${button2 ? "bg-pallet1" : "bg-red-700"} text-white p-2 rounded-lg`} onClick={tampil3}>
+          {tulisan3}
+        </button>
+        
+        <div className={`container ${style2} justify-center items-center`}>
+          <EditStatus />
+        </div>
       </section>
     </>
   );

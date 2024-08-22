@@ -973,6 +973,47 @@ const perpusController = {
         }
     },
 
+    updateStatus: async (req, res) => {
+        const connection = await pool.getConnection()
+        try {
+            const {id_user, status} = req.body
+            
+            await connection.beginTransaction()
+
+            const sqlCheck = `SELECT user_data.id_user FROM user_data WHERE id_user = ?`
+
+            const [result] = await pool.query(sqlCheck, [id_user])
+            
+            const sqlUpdateLogin = `UPDATE user_data SET status = ? WHERE id_user = ?`
+
+            if (result[0].id_user != id_user) {
+                res.status(500).json({
+                    state: "error",
+                    message: "User tidak ditemukan"
+                })
+            } else {
+                await connection.query(sqlUpdateLogin, [status, id_user])
+
+                await connection.commit()
+
+                res.json({
+                    message: "Berhasil Mengubah Status User",
+                })
+            }
+
+
+
+        } catch (error) {
+            console.error(error)
+            res.json({
+                state: "error",
+                message: error.message
+            })
+        } finally {
+            connection.release()
+        }
+    },
+
     logout: async (req, res) => {
         const connection = await pool.getConnection()
         try {

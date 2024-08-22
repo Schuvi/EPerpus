@@ -2,7 +2,7 @@ import { useMutation } from "@tanstack/react-query";
 import axios from "axios";
 import React from "react";
 
-export default function EditUser() {
+export default function EditAdmin() {
     const base_url = import.meta.env.VITE_API_ENDPOINT
 
     const [form, setForm] = React.useState({
@@ -11,7 +11,7 @@ export default function EditUser() {
         email: "",
         password: "",
         gambar_profil: null,
-        role: "user"
+        role: "admin"
     })
 
     const editUser = useMutation({
@@ -19,17 +19,17 @@ export default function EditUser() {
             const id_user = formData.get("id_user");
             const response = await axios.put(base_url + `/edit/user?id_user=${id_user}`, formData, {
                 headers: {
-                    "Content-Type": "application/json"
+                    "Content-Type": "multipart/form-data"
                 }
             })
             console.log(response.data)
             return response.data
         },
         onSuccess: (data) => {
-            alert("Berhasil Mengubah User")
+            alert("Berhasil Mengubah Akun Admin")
         },
         onError: (error) => {
-            alert("Gagal Mengubah User")
+            alert("Gagal Mengubah Akun Admin")
         }
     })
 
@@ -37,10 +37,16 @@ export default function EditUser() {
         const {name, value, type, files} = e.target
 
         if (type === "file") {
-            setForm((prevForm) => ({
-                ...prevForm,
-                [name]: files[0]
-            }))
+
+            if (files && files.length > 0) {
+                setForm((prevData) => {
+                    const newData = { ...prevData, [name]: files[0] };
+                    return newData;
+                });
+            } else {
+                return "Belum Ada Gambar"
+            }
+            
         } else {
             setForm((prevForm) => ({
                 ...prevForm,
@@ -61,16 +67,19 @@ export default function EditUser() {
     const handleSubmit = (e) => {
         e.preventDefault()
 
-        if (!validatePassword(form.password)) {
-            alert("Password Harus Mengandung SETIDAKNYA Huruf Besar, Huruf Kecil, Angka, dan Simbol.");
-            return;
-        } else if (form.password.length < 8 ) {
-            alert("Password Harus Minimal 8 Karakter")
-            return;
-        } else if (!form.id_user.trim() || !form.nama_lengkap.trim() || !form.email.trim() || !form.password.trim()) {
-            alert("Input tidak boleh kosong atau hanya berisi spasi.");
-            return;
+        if (form.password !== "") {
+            if (!validatePassword(form.password)) {
+                alert("Password Harus Mengandung SETIDAKNYA Huruf Besar, Huruf Kecil, Angka, dan Simbol.");
+                return;
+            } else if (form.password.length < 8 ) {
+                alert("Password Harus Minimal 8 Karakter")
+                return;
+            } else if (!form.id_user.trim() || !form.nama_lengkap.trim() || !form.email.trim() || !form.password.trim()) {
+                alert("Input tidak boleh kosong atau hanya berisi spasi.");
+                return;
+            }
         }
+
 
         const formData = new FormData()
         formData.append("id_user", form.id_user)
@@ -99,8 +108,11 @@ export default function EditUser() {
                 <label htmlFor="email" className="after:content-['*'] after:ml-0.5 after:text-red-700 md:text-lg">Email</label>
                 <input type="email" className="rounded-lg " name="email" id="email" value={form.email} onChange={handleChange} required/>
 
-                <label htmlFor="password" className="after:content-['*'] after:ml-0.5 after:text-red-700 md:text-lg">Password</label>
-                <input type="text" className="rounded-lg " name="password" id="password" value={form.password} onChange={handleChange} required/>
+                <label htmlFor="password" className="md:text-lg">Password</label>
+                <input type="text" className="rounded-lg " name="password" id="password" value={form.password} onChange={handleChange}/>
+
+                <label htmlFor="gambar_profil">Gambar Profile</label>
+                <input type="file" name="gambar_profil" id="gambar_profil" onChange={handleChange}/>
 
                 <div className="text-center mt-3">
                     <button type="submit" className="border p-2 text-white bg-pallet1 rounded-lg w-1/3 text-xl">
