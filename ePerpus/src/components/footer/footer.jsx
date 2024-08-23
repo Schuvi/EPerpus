@@ -4,9 +4,9 @@ import logo from "../../assets/logo.png"
 export default function Footer() {
     return (
         <>
-            <section className="flex flex-col justify-center items-center p-3 mt-5 bg-pallet2 shadow-lg h-[29vh] xl:h-[37vh]">
+            <section className="flex flex-col justify-center items-center p-3 mt-auto bg-pallet2 shadow-lg h-fit ">
                 <div className="container flex justify-center items-center mb-5">
-                    <img src={logo} alt="logo techlibrary" className="w-[20vw] md:w-[15vw] xl:w-[7vw]"/>
+                    <img src={logo} alt="logo techlibrary" className="w-[20vw] md:w-[15vw] lg:w-[9vw] xl:w-[9vw]"/>
                     <h1 className="text-2xl md:text-[2rem] font-bold">TechLibrary</h1>
                 </div>
                 <div className="container text-center">

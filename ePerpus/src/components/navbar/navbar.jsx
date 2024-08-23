@@ -72,8 +72,8 @@ export default function Navbar() {
     return (
         <>
             <nav className="bg-pallet2 h-[10vh] w-full flex justify-center items-center p-5">
-                <div className="container w-1/2 flex justify-center items-center xl:justify-start">
-                    <img src={logo} alt="logo TechLibrary" className="w-[8vw] mr-3 xl:w-[5vw]"/>
+                <div className="container w-1/2 flex justify-center items-center lg:justify-start xl:justify-start">
+                    <img src={logo} alt="logo TechLibrary" className="w-[8vw] mr-3 lg:w-[6vw] xl:w-[5vw]"/>
                     <h1 className="font-bold tracking-widest text-2xl">TechLibrary</h1>
                 </div>
                 <div className="container w-1/2 hidden md:hidden lg:flex xl:flex 2xl:flex">

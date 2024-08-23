@@ -43,7 +43,7 @@ export default function App() {
   }, []);
 
   return (
-    <div className="wrapper-all font-firaSans">
+    <div className="wrapper-all font-firaSans flex flex-col min-h-screen">
       {showSplash ? (
         <Splash />
       ) : (

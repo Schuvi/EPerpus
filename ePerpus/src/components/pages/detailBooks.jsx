@@ -69,7 +69,7 @@ export default function DetailBooks() {
         <>
             <div className="container p-2">
                 <div className="container flex justify-center">
-                    <img src={detail.gambar_buku} alt={`Sampul Buku ${detail.judul_buku}`} className="rounded-lg w-[40vw]"/>
+                    <img src={detail.gambar_buku} alt={`Sampul Buku ${detail.judul_buku}`} className="rounded-lg w-[40vw] lg:w-[25vw]"/>
                 </div>
             </div>
             <div className="container mt-5 p-2">

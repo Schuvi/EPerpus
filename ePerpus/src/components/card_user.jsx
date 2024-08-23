@@ -22,7 +22,7 @@ export default function CardUser() {
         <>
             <div className="flex flex-row p-2 justify-evenly overflow-x-auto w-full" data-aos = "fade-right" data-aos-once="true">
                 {data?.data?.slice(0,3).map((item) => (
-                    <div key={item.id_user} className="flex-shrink-0 flex flex-row shadow-lg p-2 items-center rounded-lg w-[70vw] border mb-5 mx-2 h-[20vh] md:w-[50vw] md:h-[15vh]">
+                    <div key={item.id_user} className="flex-shrink-0 flex flex-row shadow-lg p-2 items-center rounded-lg w-[70vw] border mb-5 mx-2 h-[20vh] md:w-[50vw] md:h-[15vh] lg:w-[38vw] lg:h-[20vh]">
                         <div className="container w-1/3 flex justify-center h-[12vh]">
                             <img src={item.gambar_profil == null ? picture : item.gambar_profil} alt="Sampul Buku" className="w-[20vw] rounded-full object-cover"/>
                         </div>

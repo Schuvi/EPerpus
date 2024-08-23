@@ -50,24 +50,24 @@ export default function FavoriteBooks() {
 
   return (
     <>
-      <h1 className="text-center mt-1 text-xl font-bold">Favorite Books</h1>
-      <section className={`p-2 ${data?.data?.length >= 3 ? "h-fit" : "h-[55vh]"}`}>
-        <div className={`container ${data?.message == "Tambahkan Buku Ke Favorit" ? "flex" : "hidden"} justify-center`}>
+      <h1 className="text-center mt-3 text-xl font-bold">Favorite Books</h1>
+      <section className={`p-2 lg:flex lg:flex-row lg:flex-wrap lg:justify-evenly`}>
+        <div className={`container ${data?.data?.length < 1 ? "flex" : "hidden"} justify-center`}>
           <h1 className="text-center mt-2">Belum Ada Buku Ditambahkan Ke Favorit</h1>
         </div>
         {data?.data?.map((item) => (
-          <div className="container flex flex-row items-center border rounded-lg shadow-md p-2 mt-2" key={item.id_buku}>
+          <div className="container flex flex-row items-center border rounded-lg shadow-md p-2 mt-2 lg:w-[45vw] lg:h-[45vh]" key={item.id_buku}>
             <div className="container w-[40vw] mr-3">
               <img src={item.gambar_buku} alt="Sampul Buku" className="w-full rounded-lg" />
             </div>
             <div className="container flex flex-col h-[18vh]">
               <div className="container h-1/2 flex flex-col justify-center">
-                <h1>{item.judul_buku}</h1>
-                <h1>{item.pengarang_buku}</h1>
-                <h1 className={`${item.status == "Tersedia" ? "text-green-600" : item.status == "Dipinjam" ? "text-pallet1" : item.status == "Rusak" ? "text-red-700" : "text-green-600"}`}>{item.status}</h1>
+                <h1 className="lg:text-xl">{item.judul_buku}</h1>
+                <h1 className="lg:text-xl">{item.pengarang_buku}</h1>
+                <h1 className={`${item.status == "Tersedia" ? "text-green-600" : item.status == "Dipinjam" ? "text-pallet1" : item.status == "Rusak" ? "text-red-700" : "text-green-600"} text-lg`}>{item.status}</h1>
               </div>
 
-              <div className="container flex justify-end items-end h-1/2">
+              <div className="container flex justify-end items-end h-1/2 lg:justify-start">
                 <button onClick={() => detail(item)} type="button" className="bg-pallet2 rounded-md p-1 text-white mr-2">
                   Lihat Buku
                 </button>

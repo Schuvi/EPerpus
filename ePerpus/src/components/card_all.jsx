@@ -28,7 +28,7 @@ export default function CardAll() {
         <>
             <div className="flex flex-row p-2 justify-evenly overflow-x-auto w-full" data-aos = "fade-right" data-aos-once="true">
                 {data?.data?.slice(0,5).map((item) => (
-                    <div key={item.id_buku} className="flex-shrink-0 flex flex-col shadow-lg items-center rounded-lg w-[45vw] p-2 border mb-5 mx-2" onClick={() => detail(item)}>
+                    <div key={item.id_buku} className="flex-shrink-0 flex flex-col shadow-lg items-center rounded-lg w-[45vw] p-2 border mb-5 mx-2 lg:w-[27vw]" onClick={() => detail(item)}>
                         <div className="container flex justify-center mb-3">
                             <img src={item.gambar_buku} alt="Sampul Buku" className="w-[30vw]"/>
                         </div>

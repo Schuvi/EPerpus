@@ -120,19 +120,19 @@ export default function Search() {
         <section className={`p-2 ${style1} text-center`}>
           <h1>Buku Tidak Ditemukan</h1>
         </section>
-        <section className={`p-2 ${style}`}>
+        <section className={`p-2 lg:flex lg:flex-wrap ${style}`}>
           {hasil.map((item) => {
             return (
-              <div key={item.id_buku} className="container flex flex-row p-1 border items-center rounded-lg">
+              <div key={item.id_buku} className="container flex flex-row p-1 border items-center rounded-lg lg:w-[47vw] lg:mr-3 lg:mb-3">
                 <div className="container w-[40vw]">
-                  <img src={item.gambar_buku} alt="sampul buku" />
+                  <img src={item.gambar_buku} alt="sampul buku" className="w-full"/>
                 </div>
                 <div className="container ml-2">
                   <h1 className="font-bold text-xl">{item.judul_buku}</h1>
                   <h1>{item.pengarang_buku}</h1>
                   <h1 className={`${item.status == "Dipinjam" ? "text-pallet1" : item.status == "Tersedia" ? "text-green-500" : item.status == "Rusak" ? "text-red-500" : "text-pallet1"}`}>{item.status}</h1>
                   <div className="container mt-2">
-                    <button className="rounded-lg border p-1 bg-pallet1 text-white w-[40vw]" onClick={() => detail(item)}>
+                    <button className="rounded-lg border p-1 bg-pallet1 text-white w-[40vw] lg:w-[20vw]" onClick={() => detail(item)}>
                       Selengkapnya
                     </button>
                   </div>

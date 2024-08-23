@@ -59,8 +59,8 @@ export default function Home() {
 
     return (
         <>
-            <section className="flex flex-col items-center mt-1">
-                <div className="h-[20vh] w-[80vw] mt-3 md:h-[30vh]">
+            <section className="flex flex-col items-center mt-1 mb-2">
+                <div className="h-[20vh] w-[80vw] mt-3 md:h-[30vh] lg:w-[60vw] lg:h-[40vh] xl:w-[40vw] xl:h-[45vh]">
                     <Carousel>
                         <img src={gambar1} alt="Carousel 1" />
                         <img src={gambar1} alt="Carousel 2" />
@@ -71,7 +71,7 @@ export default function Home() {
                 </div>
             </section>
 
-            <section className="flex flex-row justify-evenly mt-5 p-2">
+            <section className="flex flex-row justify-evenly mt-5 p-2 lg:mt-7">
                 <div className="container w-1/3 h-[10vh] flex flex-col justify-center items-center" onClick={() => {navigate("/buku")}}>
                     <i className="fa-solid fa-book text-[2em] text-pallet1 md:text-[3em]"></i>
                     <h1 className="text-md text-center mt-2 tracking-tight md:text-xl">Buku Terbaru</h1>
@@ -86,7 +86,7 @@ export default function Home() {
                 </div>
             </section>
 
-            <section data-aos = "fade-right" data-aos-once="true">
+            <section data-aos = "fade-right" data-aos-once="true" className="lg:mt-3">
                 <div className="container flex p-3">
                     <div className="container w-full">
                         <h1 className="font-bold text-xl md:text-2xl">Koleksi Terpopuler</h1>

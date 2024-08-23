@@ -25,32 +25,32 @@ export default function Profile() {
     
     return (
         <>
-            <section className="h-[60vh] flex flex-col">
+            <section className="flex flex-col">
                 <h1 className="text-center font-bold text-xl mt-5">Pengaturan Profile</h1>
 
                 <div className="flex flex-col p-2 mt-2">
                     {data?.data?.map((item) => (
                         <>
                             <div className="container flex justify-center">
-                                <div className="container h-[14vh] w-[30vw]">
+                                <div className="container h-[14vh] w-[30vw] lg:h-[20vh] lg:w-[15vw]">
                                     <img src={item.gambar_profil == null ? picture : item.gambar_profil} alt="Foto Profile" className="h-full w-full rounded-full object-cover" />
                                 </div>
                             </div>
-                            <div className="container text-center mt-2" onClick={() => navigate("/profile/edit", {state: {edit: item}})}>
-                                <h1><i className="fa-solid fa-pen mr-1 mt-2"></i> Edit Profile</h1>
+                            <div className="text-center mt-2" onClick={() => navigate("/profile/edit", {state: {edit: item}})}>
+                                <h1 className="cursor-pointer"><i className="fa-solid fa-pen mr-1 mt-2"></i> Edit Profile</h1>
                             </div>
                             <div className="container">
-                                <h1 className="font-bold">User ID :</h1>
-                                <h1>{item.id_user}</h1>
+                                <h1 className="font-bold lg:text-xl">User ID :</h1>
+                                <h1 className="lg:text-lg">{item.id_user}</h1>
 
-                                <h1 className="font-bold">Nama Lengkap : </h1>
-                                <h1>{item.nama_lengkap}</h1>
+                                <h1 className="font-bold lg:text-xl">Nama Lengkap : </h1>
+                                <h1 className="lg:text-lg">{item.nama_lengkap}</h1>
 
-                                <h1 className="font-bold">Email :</h1>
-                                <h1>{item.email}</h1>
+                                <h1 className="font-bold lg:text-xl">Email :</h1>
+                                <h1 className="lg:text-lg">{item.email}</h1>
 
-                                <h1 className="font-bold">Jumlah Peminjaman Buku :</h1>
-                                <h1>{item.banyak_meminjam} Kali</h1>
+                                <h1 className="font-bold lg:text-xl">Jumlah Peminjaman Buku :</h1>
+                                <h1 className="lg:text-lg">{item.banyak_meminjam} Kali</h1>
                             </div>
                         </>
                     ))}
